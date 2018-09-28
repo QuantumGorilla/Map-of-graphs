@@ -1,6 +1,6 @@
 package Frame;
 
-import Data.Relations;
+import Data.Relation;
 import Data.Helper;
 import Data.Node;
 import java.awt.Color;
@@ -15,7 +15,9 @@ import javax.swing.JOptionPane;
 public class Frame extends javax.swing.JFrame {
 
     ArrayList<Node> nodes = new ArrayList<>();
-    Relations g;
+    ArrayList<Relation> relations = new ArrayList<>();
+    Node a;
+    Node b;
 
     public Frame() {
         initComponents();
@@ -26,15 +28,25 @@ public class Frame extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
     }
 
-    public void paint(java.awt.Graphics graphics, Node n) {
+    public void paint(java.awt.Graphics g, Node n) {
         map2.revalidate();
 
-        graphics.setColor(Color.white);
-        graphics.fillOval(n.getX() - 5, n.getY() - 5, 55, 55);
-        graphics.drawOval(n.getX() - 5, n.getY() - 5, 55, 55);
+        g.setColor(Color.white);
+        g.fillOval(n.getX(), n.getY(), 55, 55);
+        g.drawOval(n.getX(), n.getY(), 55, 55);
 
-        graphics.setColor(Color.black);
-        graphics.drawString(n.getCity(), n.getX(), n.getY() + 25);
+        g.setColor(Color.black);
+        g.drawString(n.getCity(), n.getX(), n.getY() + 20);
+    }
+
+    public void paintDistance(java.awt.Graphics g, Node a, Node b, String distance) {
+        map2.revalidate();
+
+        g.setColor(Color.WHITE);
+        g.drawLine(a.getX() + 10, a.getY() + 10, b.getX() + 10, b.getY() + 10);
+        
+        g.setColor(Color.BLACK);
+        g.drawString(distance, ((a.getX() + b.getX()) / 2) + 10, ((a.getY() + b.getY()) / 2) + 10);
     }
 
     @SuppressWarnings("unchecked")
@@ -101,26 +113,45 @@ public class Frame extends javax.swing.JFrame {
 
         if (evt.getButton() == MouseEvent.BUTTON1) {
 
-            String answer = JOptionPane.showInputDialog(null, "Quieres añadir un lugar en esta posiciòn? Si / No", "Añadir", JOptionPane.INFORMATION_MESSAGE);
+            try {
+                String answer = JOptionPane.showInputDialog(null, "Quieres añadir un lugar en esta posiciòn? Si / No", "Añadir", JOptionPane.INFORMATION_MESSAGE);
 
-            if (!answer.isEmpty() && answer.equalsIgnoreCase("Si")) {
+                if (!answer.isEmpty() && answer.equalsIgnoreCase("Si")) {
 
-                String city = Helper.checkCityName(JOptionPane.showInputDialog(null, "Nombre de la ciudad", "Ciudad", JOptionPane.INFORMATION_MESSAGE));
-                String hood = Helper.checkHoodName(JOptionPane.showInputDialog(null, "Nombre del barrio", "Barrio", JOptionPane.INFORMATION_MESSAGE));
-                String country = Helper.checkCountryName(JOptionPane.showInputDialog(null, "Nombre del país", "Pais", JOptionPane.INFORMATION_MESSAGE));
+                    String city = Helper.introduceCity();
+                    String hood = Helper.introduceHood();
+                    String country = Helper.introduceCountry();
 
-                if (nodes.isEmpty()) {
-                    addNodes(evt.getX(), evt.getY(), city, hood, country);
-                    paint(map2.getGraphics(), nodes.get(Helper.nodeCount));
-                    Helper.plusOneNode();
-                } else {
-                    if (Helper.checkNodesPosition(nodes, evt.getX(), evt.getY())) {
-                        Helper.errorMessage();
-                    } else {
+                    if (nodes.isEmpty()) {
                         addNodes(evt.getX(), evt.getY(), city, hood, country);
                         paint(map2.getGraphics(), nodes.get(Helper.nodeCount));
                         Helper.plusOneNode();
+                    } else {
+                        if (Helper.checkNodesPosition(nodes, evt.getX(), evt.getY())) {
+                            Helper.errorMessage();
+                        } else {
+                            addNodes(evt.getX(), evt.getY(), city, hood, country);
+                            paint(map2.getGraphics(), nodes.get(Helper.nodeCount));
+                            Helper.plusOneNode();
+                        }
                     }
+                }
+            } catch (Exception e) {
+
+            }
+        } else {
+            if (evt.getButton() == MouseEvent.BUTTON3) {
+                if (Helper.checkNodesPosition(nodes, evt.getX(), evt.getY()) && !Helper.primaryOcuppied) {
+                    a = Helper.getNodeInPosition(nodes, evt.getX(), evt.getY());
+                } else {
+                    b = Helper.getNodeInPosition(nodes, evt.getX(), evt.getY());
+                    Helper.setPrimaryNode();
+                }
+                if (a != null && b != null) {
+                    relations.add(new Relation(a, b, Helper.introduceDistance()));
+                    paintDistance(map2.getGraphics(), relations.get(Helper.relationCount).getNodeA(), relations.get(Helper.relationCount).getNodeB(),
+                            relations.get(Helper.relationCount).getDistance());
+                    Helper.plusOneRelation();
                 }
             }
         }

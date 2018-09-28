@@ -4,22 +4,22 @@ package Data;
  *
  * @author Alejandro
  */
-public class Relations {
+public class Relation {
 
     private Node a, b;
-    private int distance;
+    private String distance;
 
-    public Relations(Node a, Node b, int distance) {
+    public Relation(Node a, Node b, String distance) {
         this.a = a;
         this.b = b;
         this.distance = distance;
     }
 
-    public int getDistance() {
+    public String getDistance() {
         return distance;
     }
 
-    public void setDistance(int distance) {
+    public void setDistance(String distance) {
         this.distance = distance;
     }
 
