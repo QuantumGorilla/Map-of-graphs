@@ -1,7 +1,9 @@
 package Frame;
 
+import Data.Relations;
 import Data.Helper;
 import Data.Node;
+import java.awt.Color;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
@@ -13,6 +15,7 @@ import javax.swing.JOptionPane;
 public class Frame extends javax.swing.JFrame {
 
     ArrayList<Node> nodes = new ArrayList<>();
+    Relations g;
 
     public Frame() {
         initComponents();
@@ -21,6 +24,17 @@ public class Frame extends javax.swing.JFrame {
 
     private void setScreenLocation() {
         this.setLocationRelativeTo(null);
+    }
+
+    public void paint(java.awt.Graphics graphics, Node n) {
+        map2.revalidate();
+
+        graphics.setColor(Color.white);
+        graphics.fillOval(n.getX() - 5, n.getY() - 5, 55, 55);
+        graphics.drawOval(n.getX() - 5, n.getY() - 5, 55, 55);
+
+        graphics.setColor(Color.black);
+        graphics.drawString(n.getCity(), n.getX(), n.getY() + 25);
     }
 
     @SuppressWarnings("unchecked")
@@ -97,11 +111,15 @@ public class Frame extends javax.swing.JFrame {
 
                 if (nodes.isEmpty()) {
                     addNodes(evt.getX(), evt.getY(), city, hood, country);
+                    paint(map2.getGraphics(), nodes.get(Helper.nodeCount));
+                    Helper.plusOneNode();
                 } else {
                     if (Helper.checkNodesPosition(nodes, evt.getX(), evt.getY())) {
-                        JOptionPane.showMessageDialog(null, "Ya hay un nodo aquí", "Error", JOptionPane.ERROR_MESSAGE);
+                        Helper.errorMessage();
                     } else {
                         addNodes(evt.getX(), evt.getY(), city, hood, country);
+                        paint(map2.getGraphics(), nodes.get(Helper.nodeCount));
+                        Helper.plusOneNode();
                     }
                 }
             }
@@ -111,15 +129,17 @@ public class Frame extends javax.swing.JFrame {
 
     private void addNodes(int x, int y, String city, String hood, String country) {
         nodes.add(new Node(x, y, city, hood, country));
-        destiny.insertItemAt(nodes.get(Helper.nodeCount).getCity(), Helper.nodeCount);
-        origin.insertItemAt(nodes.get(Helper.nodeCount).getCity(), Helper.nodeCount);
-        Helper.nodeCount++;
+        addNodesInComboBox();
+    }
+
+    private void addNodesInComboBox() {
+        destiny.insertItemAt(nodes.get(Helper.nodeCount).getCity() + "/" + nodes.get(Helper.nodeCount).getCountry(), Helper.nodeCount);
+        origin.insertItemAt(nodes.get(Helper.nodeCount).getCity() + "/" + nodes.get(Helper.nodeCount).getCountry(), Helper.nodeCount);
     }
 
     private void priceFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_priceFieldKeyTyped
 
-        evt
-                .consume();
+        evt.consume();
 
     }//GEN-LAST:event_priceFieldKeyTyped
 

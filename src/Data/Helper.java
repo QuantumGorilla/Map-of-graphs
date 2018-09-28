@@ -40,5 +40,13 @@ public class Helper {
         }
         return country;
     }
+    
+    public static void errorMessage() {
+        JOptionPane.showMessageDialog(null, "Ya hay un nodo aquí", "Error", JOptionPane.ERROR_MESSAGE);
+    }
+    
+    public static void plusOneNode() {
+        Helper.nodeCount++;
+    }
 
 }
