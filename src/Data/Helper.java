@@ -35,18 +35,18 @@ public class Helper {
     }
 
     public static int introduceDistance() {
-        return Helper.checkDistance(JOptionPane.showInputDialog(null, "Valor entre los nodos", "Distancia", JOptionPane.INFORMATION_MESSAGE));
+        return Helper.checkDistance(JOptionPane.showInputDialog(null, "Valor entre los vertice", "Distancia", JOptionPane.INFORMATION_MESSAGE));
     }
 
     private static int checkDistance(String distance) {
         while (distance.isEmpty()) {
-            distance = JOptionPane.showInputDialog(null, "Valor entre los nodos", "Distancia", JOptionPane.INFORMATION_MESSAGE);
+            distance = JOptionPane.showInputDialog(null, "Valor entre los vertices", "Distancia", JOptionPane.INFORMATION_MESSAGE);
         }
         return Integer.parseInt(distance);
     }
 
     public static void errorMessage() {
-        JOptionPane.showMessageDialog(null, "Ya hay un nodo aquí", "Error", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(null, "Ya hay un vertice aquí", "Error", JOptionPane.ERROR_MESSAGE);
     }
 
     public static void setPrimaryNode() {

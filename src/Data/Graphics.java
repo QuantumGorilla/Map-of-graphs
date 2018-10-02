@@ -1,6 +1,10 @@
 package Data;
 
 import static Data.Helper.primaryOcuppied;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics2D;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import java.io.IOException;
@@ -47,7 +51,7 @@ public class Graphics {
         Node a;
         if (checkNodesPosition(nodes, x, y) && !Helper.primaryOcuppied) {
             a = getNodeInPosition(nodes, x, y);
-            JOptionPane.showMessageDialog(null, "Seleccionaste el nodo: " + a.getCity(), "Seleccion Exitosa", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Seleccionaste el vertice: " + a.getCity(), "Seleccion Exitosa", JOptionPane.INFORMATION_MESSAGE);
             return a;
         }
         return null;
@@ -57,21 +61,42 @@ public class Graphics {
         Node b;
         if (checkNodesPosition(nodes, x, y)) {
             b = getNodeInPosition(nodes, x, y);
-            JOptionPane.showMessageDialog(null, "Seleccionaste el nodo: " + b.getCity(), "Seleccion Exitosa", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Seleccionaste el vertice: " + b.getCity(), "Seleccion Exitosa", JOptionPane.INFORMATION_MESSAGE);
             Helper.setPrimaryNode();
             return b;
         }
         return null;
     }
-    
-    
-        public void playMusic(){
+
+    public static void paint(Graphics2D g, Node n) {
+        g.setStroke(new BasicStroke(3));
+        g.setColor(Color.decode("#304fb5"));
+        g.fillOval(n.getPosX() - 20, n.getPosY() - 20, 45, 35);
+        g.setColor(Color.decode("#80da03"));
+        g.drawOval(n.getPosX() - 20, n.getPosY() - 20, 45, 35);
+
+        g.setColor(Color.BLACK);
+        g.setFont(new Font("Gadugi", Font.BOLD, 10));
+        g.drawString(n.getCity(), n.getPosX() - 20, n.getPosY());
+    }
+
+    public static void paintDistance(Graphics2D g, Node origin, Node destiny, int distance) {
+        g.setStroke(new BasicStroke(3));
+        g.setColor(Color.decode("#e5bf23"));
+        g.drawLine(origin.getPosX() + 25, origin.getPosY(), destiny.getPosX() + 25, destiny.getPosY());
+
+        g.setColor(Color.decode("#ff7e00"));
+        g.setFont(new Font("Gadugi", Font.BOLD, 10));
+        g.drawString(String.valueOf(distance), ((origin.getPosX() + destiny.getPosX()) / 2), ((origin.getPosY() + destiny.getPosY()) / 2));
+    }
+
+    public void playMusic() {
         try {
             Clip sound = AudioSystem.getClip();
             sound.open(AudioSystem.getAudioInputStream(getClass().getResourceAsStream("/Music/Mario_Overworld_Theme.wav")));
             sound.loop(Clip.LOOP_CONTINUOUSLY);
         } catch (LineUnavailableException | UnsupportedAudioFileException | IOException ex) {
-            
+
         }
     }
 }

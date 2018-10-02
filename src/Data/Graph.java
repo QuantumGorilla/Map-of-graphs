@@ -19,9 +19,9 @@ public class Graph {
                 }
             }
         }
-        for (Edge edge : Frame.Frame.edges) {
+        Frame.Frame.edges.forEach((edge) -> {
             matrix[Frame.Frame.nodes.indexOf(edge.getNodeOrigin())][Frame.Frame.nodes.indexOf(edge.getNodeDestiny())] = edge.getDistance();
-        }
+        });
         return matrix;
     }
 
