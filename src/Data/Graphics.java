@@ -84,12 +84,21 @@ public class Graphics {
         g.setStroke(new BasicStroke(3));
         g.setColor(Color.decode("#e5bf23"));
         g.drawLine(origin.getPosX() + 25, origin.getPosY(), destiny.getPosX() + 25, destiny.getPosY());
+        g.drawPolygon(drawTriangleX(), drawTriangleY(), 3);
 
         g.setColor(Color.decode("#ff7e00"));
         g.setFont(new Font("Gadugi", Font.BOLD, 10));
         g.drawString(String.valueOf(distance), ((origin.getPosX() + destiny.getPosX()) / 2), ((origin.getPosY() + destiny.getPosY()) / 2));
     }
-
+    
+    private static int[] drawTriangleX(){
+        return new int[]{20, 20, 30};
+    }
+    
+    private static int[] drawTriangleY(){
+        return new int[]{20, 20, 30};
+    }
+    
     public void playMusic() {
         try {
             Clip sound = AudioSystem.getClip();

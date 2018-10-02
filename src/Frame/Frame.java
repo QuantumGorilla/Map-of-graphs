@@ -8,6 +8,7 @@ import Data.Node;
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 /**
@@ -19,6 +20,7 @@ public class Frame extends javax.swing.JFrame {
     private ArrayList<Node> nodes = new ArrayList<>();
     private ArrayList<Edge> edges = new ArrayList<>();
     private int[][] distance;
+    private String[][] path;
     private Node origin;
     private Node destiny;
     private Node helperNode;
@@ -27,7 +29,22 @@ public class Frame extends javax.swing.JFrame {
     public Frame() {
         initComponents();
         setScreenLocation();
+        setTitle();
+        setResize(false);
+        setFavicon();
         music.playMusic();
+    }
+    
+    private void setResize(boolean resize){
+        this.setResizable(resize);
+    }
+    
+    private void setFavicon(){
+        this.setIconImage(new ImageIcon(getClass().getResource("/Images/Mario Mushroom.png")).getImage());
+    }
+    
+    private void setTitle(){
+        this.setTitle("Mapa de grafos");
     }
 
     private void setScreenLocation() {
@@ -244,7 +261,8 @@ public class Frame extends javax.swing.JFrame {
     private void floydButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_floydButtonActionPerformed
 
         distance = Graph.getDistanceMatrix(nodes, edges);
-        Graph.floyd(distance);
+        path = Graph.getPathMatrix(nodes, edges);
+        Graph.floyd(distance, path, nodes);
 
     }//GEN-LAST:event_floydButtonActionPerformed
 
