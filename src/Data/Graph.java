@@ -27,24 +27,12 @@ public class Graph {
         return matrix;
     }
 
-    public static String[][] getPathMatrix(ArrayList<Node> nodes, ArrayList<Edge> edges) {
-        String matrix[][] = new String[nodes.size()][nodes.size()];
-        for (int j = 0; j < matrix.length; j++) {
-            String city = nodes.get(j).getCity();
-            for (int i = 0; i < matrix.length; i++) {
-                matrix[i][j] = city;
-            }
-        }
-        return matrix;
-    }
-
-    public static void floyd(int[][] adj, String[][] paths, ArrayList<Node> nodes) {
+    public static void floyd(int[][] adj) {
         for (int k = 0; k < adj.length; k++) {
             for (int i = 0; i < adj.length; i++) {
                 for (int j = 0; j < adj.length; j++) {
                     if (adj[i][k] + adj[k][j] < adj[i][j]) {
                         adj[i][j] = adj[i][k] + adj[k][j];
-                        paths[i][j] =  nodes.get(k).getCity();
                     }
                 }
             }
