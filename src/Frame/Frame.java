@@ -50,12 +50,12 @@ public class Frame extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
     }
 
-    public void paint(Graphics2D g, Node n) {
+    private void paint(Graphics2D g, Node n) {
         map2.revalidate();
         Graphics.paint(g, n);
     }
 
-    public void paintDistance(Graphics2D g, Node origin, Node destiny, int distance) {
+    private void paintDistance(Graphics2D g, Node origin, Node destiny, int distance) {
         map2.revalidate();
         Graphics.paintDistance(g, origin, destiny, distance);
     }
