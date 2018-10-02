@@ -1,5 +1,7 @@
 package Data;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Alejandro
@@ -8,8 +10,8 @@ public class Graph {
 
     public final static int INF = 99999;
 
-    public static int[][] getDistanceMatrix() {
-        int matrix[][] = new int[Frame.Frame.nodes.size()][Frame.Frame.nodes.size()];
+    public static int[][] getDistanceMatrix(ArrayList<Node> nodes, ArrayList<Edge> edges) {
+        int matrix[][] = new int[nodes.size()][nodes.size()];
         for (int i = 0; i < matrix.length; i++) {
             for (int j = 0; j < matrix.length; j++) {
                 if (i == j) {
@@ -19,8 +21,8 @@ public class Graph {
                 }
             }
         }
-        Frame.Frame.edges.forEach((edge) -> {
-            matrix[Frame.Frame.nodes.indexOf(edge.getNodeOrigin())][Frame.Frame.nodes.indexOf(edge.getNodeDestiny())] = edge.getDistance();
+        edges.forEach((edge) -> {
+            matrix[nodes.indexOf(edge.getNodeOrigin())][nodes.indexOf(edge.getNodeDestiny())] = edge.getDistance();
         });
         return matrix;
     }

@@ -16,8 +16,8 @@ import javax.swing.JOptionPane;
  */
 public class Frame extends javax.swing.JFrame {
 
-    public static ArrayList<Node> nodes = new ArrayList<>();
-    public static ArrayList<Edge> edges = new ArrayList<>();
+    private ArrayList<Node> nodes = new ArrayList<>();
+    private ArrayList<Edge> edges = new ArrayList<>();
     private int[][] distance;
     private Node origin;
     private Node destiny;
@@ -243,7 +243,7 @@ public class Frame extends javax.swing.JFrame {
 
     private void floydButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_floydButtonActionPerformed
 
-        distance = Graph.getDistanceMatrix();
+        distance = Graph.getDistanceMatrix(nodes, edges);
         Graph.floyd(distance);
 
     }//GEN-LAST:event_floydButtonActionPerformed
