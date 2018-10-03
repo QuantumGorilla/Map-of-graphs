@@ -4,10 +4,9 @@ import Data.Graphics;
 import Data.Edge;
 import Data.Graph;
 import Data.Helper;
-import Data.Node;
+import Data.Vertex;
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
@@ -17,32 +16,33 @@ import javax.swing.JOptionPane;
  */
 public class Frame extends javax.swing.JFrame {
 
-    private ArrayList<Node> nodes = new ArrayList<>();
-    private ArrayList<Edge> edges = new ArrayList<>();
+    private Graph graph;
     private int[][] distance;
-    private Node origin;
-    private Node destiny;
-    private Node helperNode;
-    private final Graphics music = new Graphics();
+    private Vertex origin;
+    private Vertex destiny;
+    private Vertex helperVertex;
+    private final Graphics graphics;
 
     public Frame() {
         initComponents();
+        graph = new Graph();
+        graphics = new Graphics();
         setScreenLocation();
         setTitle();
         setResize(false);
         setFavicon();
-        music.playMusic();
+        graphics.playMusic();
     }
-    
-    private void setResize(boolean resize){
+
+    private void setResize(boolean resize) {
         this.setResizable(resize);
     }
-    
-    private void setFavicon(){
+
+    private void setFavicon() {
         this.setIconImage(new ImageIcon(getClass().getResource("/Images/Mario Mushroom.png")).getImage());
     }
-    
-    private void setTitle(){
+
+    private void setTitle() {
         this.setTitle("Mapa de grafos");
     }
 
@@ -50,14 +50,14 @@ public class Frame extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
     }
 
-    private void paint(Graphics2D g, Node n) {
+    private void paint(Graphics2D g, Vertex n) {
         map2.revalidate();
-        Graphics.paint(g, n);
+        graphics.paint(g, n);
     }
 
-    private void paintDistance(Graphics2D g, Node origin, Node destiny, int distance) {
+    private void paintDistance(Graphics2D g, Vertex origin, Vertex destiny, int distance) {
         map2.revalidate();
-        Graphics.paintDistance(g, origin, destiny, distance);
+        graphics.paintDistance(g, origin, destiny, distance);
     }
 
     @SuppressWarnings("unchecked")
@@ -72,10 +72,9 @@ public class Frame extends javax.swing.JFrame {
         destinyBox = new javax.swing.JComboBox<>();
         destinyLabel = new javax.swing.JLabel();
         priceLabel = new javax.swing.JLabel();
-        floydButton = new javax.swing.JButton();
-        priceField = new javax.swing.JTextField();
         price = new javax.swing.JButton();
         helpLabel = new javax.swing.JLabel();
+        deleteButton = new javax.swing.JButton();
         backgroundLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -90,7 +89,7 @@ public class Frame extends javax.swing.JFrame {
                 map2MouseClicked(evt);
             }
         });
-        map.add(map2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 750, -1));
+        map.add(map2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 750, 390));
 
         getContentPane().add(map, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 118, 750, 400));
 
@@ -100,42 +99,25 @@ public class Frame extends javax.swing.JFrame {
 
         originLabel.setFont(new java.awt.Font("Georgia", 1, 14)); // NOI18N
         originLabel.setText("Ciudad origen");
-        backGroundPanel.add(originLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 20, -1, 20));
+        backGroundPanel.add(originLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 30, -1, 20));
 
         originBox.setFont(new java.awt.Font("Georgia", 0, 12)); // NOI18N
         originBox.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        backGroundPanel.add(originBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 50, 140, 30));
+        backGroundPanel.add(originBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 60, 140, 30));
 
         destinyBox.setFont(new java.awt.Font("Georgia", 0, 12)); // NOI18N
         destinyBox.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        backGroundPanel.add(destinyBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 50, 150, 30));
+        backGroundPanel.add(destinyBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 60, 150, 30));
 
         destinyLabel.setFont(new java.awt.Font("Georgia", 1, 14)); // NOI18N
         destinyLabel.setText("Ciudad destino");
-        backGroundPanel.add(destinyLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 20, -1, 20));
+        backGroundPanel.add(destinyLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 30, -1, 20));
 
         priceLabel.setFont(new java.awt.Font("Georgia", 1, 14)); // NOI18N
-        priceLabel.setText("Mìnimo Costo:");
-        backGroundPanel.add(priceLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 20, -1, 30));
+        priceLabel.setText("Mínimo Costo");
+        backGroundPanel.add(priceLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 70, -1, 30));
 
-        floydButton.setFont(new java.awt.Font("Georgia", 1, 14)); // NOI18N
-        floydButton.setText("Floyd Warshall");
-        floydButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        floydButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                floydButtonActionPerformed(evt);
-            }
-        });
-        backGroundPanel.add(floydButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 70, 170, 30));
-
-        priceField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                priceFieldKeyTyped(evt);
-            }
-        });
-        backGroundPanel.add(priceField, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 20, 179, 30));
-
-        price.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/Mario coin.png"))); // NOI18N
+        price.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/Coin Mario.png"))); // NOI18N
         price.setBorder(null);
         price.setContentAreaFilled(false);
         price.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -144,9 +126,10 @@ public class Frame extends javax.swing.JFrame {
                 priceActionPerformed(evt);
             }
         });
-        backGroundPanel.add(price, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 50, 70, -1));
+        backGroundPanel.add(price, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 50, 50, -1));
 
         helpLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/Help-icon.png"))); // NOI18N
+        helpLabel.setText("Help");
         helpLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 helpLabelMouseClicked(evt);
@@ -154,8 +137,16 @@ public class Frame extends javax.swing.JFrame {
         });
         backGroundPanel.add(helpLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
-        backgroundLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/Mario clouds.png"))); // NOI18N
-        backGroundPanel.add(backgroundLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 750, -1));
+        deleteButton.setText("Eliminar");
+        deleteButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteButtonActionPerformed(evt);
+            }
+        });
+        backGroundPanel.add(deleteButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 60, -1, -1));
+
+        backgroundLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/Clouds.png"))); // NOI18N
+        backGroundPanel.add(backgroundLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 750, 120));
 
         getContentPane().add(backGroundPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 750, 120));
 
@@ -166,40 +157,40 @@ public class Frame extends javax.swing.JFrame {
 
         try {
             if (evt.getButton() == MouseEvent.BUTTON1) {
-                if (nodes.isEmpty()) {
-                    helperNode = Graphics.answer(JOptionPane.showInputDialog(null, "Quieres añadir un lugar en esta posiciòn? Sí / No", "Añadir", JOptionPane.INFORMATION_MESSAGE), evt.getX(), evt.getY());
-                    if (helperNode != null) {
-                        nodes.add(helperNode);
-                        addNodesInComboBox();
-                        paint((Graphics2D) map2.getGraphics(), nodes.get(Helper.nodeCount));
-                        Helper.plusOneNode();
+                if (graph.getVertexList().isEmpty()) {
+                    helperVertex = graphics.answer(JOptionPane.showInputDialog(null, "Quieres añadir un lugar en esta posiciòn? Sí / No", "Añadir", JOptionPane.INFORMATION_MESSAGE), evt.getX(), evt.getY());
+                    if (helperVertex != null) {
+                        graph.addVertex(helperVertex);
+                        addVertexInComboBox();
+                        paint((Graphics2D) map2.getGraphics(), graph.getVertexList().get(Helper.vertexCount));
+                        Helper.plusOneVertex();
                     }
                 } else {
-                    if (Graphics.checkNodesPosition(nodes, evt.getX(), evt.getY())) {
+                    if (graphics.checkVertexPosition(graph.getVertexList(), evt.getX(), evt.getY())) {
                         Helper.errorMessage();
                     } else {
-                        helperNode = Graphics.answer(JOptionPane.showInputDialog(null, "Quieres añadir un lugar en esta posiciòn? Sí / No", "Añadir", JOptionPane.INFORMATION_MESSAGE), evt.getX(), evt.getY());
-                        if (helperNode != null) {
-                            nodes.add(helperNode);
-                            addNodesInComboBox();
-                            paint((Graphics2D) map2.getGraphics(), nodes.get(Helper.nodeCount));
-                            Helper.plusOneNode();
+                        helperVertex = graphics.answer(JOptionPane.showInputDialog(null, "Quieres añadir un lugar en esta posiciòn? Sí / No", "Añadir", JOptionPane.INFORMATION_MESSAGE), evt.getX(), evt.getY());
+                        if (helperVertex != null) {
+                            graph.getVertexList().add(helperVertex);
+                            addVertexInComboBox();
+                            paint((Graphics2D) map2.getGraphics(), graph.getVertexList().get(Helper.vertexCount));
+                            Helper.plusOneVertex();
                         }
                     }
                 }
             } else {
                 if (evt.getButton() == MouseEvent.BUTTON3) {
                     if (!Helper.primaryOcuppied) {
-                        origin = Graphics.originNode(nodes, evt.getX(), evt.getY());
+                        origin = graphics.originVertex(graph.getVertexList(), evt.getX(), evt.getY());
                     } else {
-                        destiny = Graphics.destinyNode(nodes, evt.getX(), evt.getY());
-                        Helper.setPrimaryNode();
+                        destiny = graphics.destinyVertex(graph.getVertexList(), evt.getX(), evt.getY());
+                        Helper.setPrimaryVertex();
                     }
                     if (origin != null && destiny != null) {
-                        edges.add(new Edge(origin, destiny, Helper.introduceDistance()));
-                        paintDistance((Graphics2D) map2.getGraphics(), edges.get(Helper.relationCount).getNodeOrigin(), edges.get(Helper.relationCount).getNodeDestiny(),
-                                edges.get(Helper.relationCount).getDistance());
-                        Helper.plusOneRelation();
+                        graph.getEdgesList().add(new Edge(origin, destiny, Helper.introduceDistance()));
+                        paintDistance((Graphics2D) map2.getGraphics(), graph.getEdgesList().get(Helper.edgeCount).getNodeOrigin(), graph.getEdgesList().get(Helper.edgeCount).getNodeDestiny(),
+                                graph.getEdgesList().get(Helper.edgeCount).getDistance());
+                        Helper.plusOneEdge();
                         origin = destiny = null;
                     }
                 }
@@ -209,26 +200,23 @@ public class Frame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_map2MouseClicked
 
-    private void addNodesInComboBox() {
-        destinyBox.insertItemAt(nodes.get(Helper.nodeCount).getCity() + "/" + nodes.get(Helper.nodeCount).getCountry(), Helper.nodeCount);
-        originBox.insertItemAt(nodes.get(Helper.nodeCount).getCity() + "/" + nodes.get(Helper.nodeCount).getCountry(), Helper.nodeCount);
+    private void addVertexInComboBox() {
+        destinyBox.insertItemAt(graph.getVertexList().get(Helper.vertexCount).getCity() + "/" + graph.getVertexList().get(Helper.vertexCount).getCountry(), Helper.vertexCount);
+        originBox.insertItemAt(graph.getVertexList().get(Helper.vertexCount).getCity() + "/" + graph.getVertexList().get(Helper.vertexCount).getCountry(), Helper.vertexCount);
     }
-
-    private void priceFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_priceFieldKeyTyped
-
-        evt.consume();
-
-    }//GEN-LAST:event_priceFieldKeyTyped
 
     private void priceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_priceActionPerformed
 
         try {
-            if (searchOriginNode() != null && searchDestinyNode() != null && distance != null) {
-                int price = distance[nodes.indexOf(searchOriginNode())][nodes.indexOf(searchDestinyNode())];
+            distance = graph.getDistanceMatrix(graph.getVertexList(), graph.getEdgesList());
+            graph.floyd(distance);
+            if (searchOriginVertex() != null && searchDestinyVertex() != null && distance != null) {
+                int price = distance[graph.getVertexList().indexOf(searchOriginVertex())][graph.getVertexList().indexOf(searchDestinyVertex())];
                 if (price == Graph.INF) {
-                    JOptionPane.showMessageDialog(null, "No puedes ir de " + searchOriginNode().getCity() + " a " + searchDestinyNode().getCity());
+                    JOptionPane.showMessageDialog(null, "No puedes ir de " + searchOriginVertex().getCity() + " a " + searchDestinyVertex().getCity());
                 } else {
-                    priceField.setText(String.valueOf(price));
+                    JOptionPane.showMessageDialog(null, "La ruta mínima para ir de: " + originBox.getSelectedItem().toString()
+                            + " a " + destinyBox.getSelectedItem().toString() + " cuesta " + price, "Ruta mínima", JOptionPane.INFORMATION_MESSAGE);
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "Selecciona dos ciudades en el combo box y presiona el boton de Floyd Warshall");
@@ -239,30 +227,23 @@ public class Frame extends javax.swing.JFrame {
 
     }//GEN-LAST:event_priceActionPerformed
 
-    private Node searchOriginNode() {
-        for (Node n : nodes) {
-            if (originBox.getSelectedItem().toString().equalsIgnoreCase(n.getCity() + "/" + n.getCountry())) {
-                return n;
+    private Vertex searchOriginVertex() {
+        for (Vertex v : graph.getVertexList()) {
+            if (originBox.getSelectedItem().toString().equalsIgnoreCase(v.getCity() + "/" + v.getCountry())) {
+                return v;
             }
         }
         return null;
     }
 
-    private Node searchDestinyNode() {
-        for (Node n : nodes) {
-            if (destinyBox.getSelectedItem().toString().equalsIgnoreCase(n.getCity() + "/" + n.getCountry())) {
-                return n;
+    private Vertex searchDestinyVertex() {
+        for (Vertex v : graph.getVertexList()) {
+            if (destinyBox.getSelectedItem().toString().equalsIgnoreCase(v.getCity() + "/" + v.getCountry())) {
+                return v;
             }
         }
         return null;
     }
-
-    private void floydButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_floydButtonActionPerformed
-
-        distance = Graph.getDistanceMatrix(nodes, edges);
-        Graph.floyd(distance);
-
-    }//GEN-LAST:event_floydButtonActionPerformed
 
     private void helpLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_helpLabelMouseClicked
 
@@ -273,6 +254,50 @@ public class Frame extends javax.swing.JFrame {
                 + " luego presiona el boton de floyd warshall y luego en la moneda.", "Ayuda", JOptionPane.INFORMATION_MESSAGE);
 
     }//GEN-LAST:event_helpLabelMouseClicked
+
+    private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
+
+        try {
+            int i = 0, j = 0, init = graph.getVertexList().size();
+            String ans = JOptionPane.showInputDialog(null, "¿Cual vertice desea eliminar?", "Eliminar", JOptionPane.QUESTION_MESSAGE);
+            if (!ans.isEmpty() && ans != null) {
+                for (Vertex v : graph.getVertexList()) {
+                    if (v.getCity().equalsIgnoreCase(ans)) {
+                        graph.getVertexList().remove(i);
+                        deleteFromOriginBox(i);
+                        deleteFromDestinyBox(j);
+                        break;
+                    }
+                    i++;
+                }
+                for (Edge e : graph.getEdgesList()) {
+                    if (e.getNodeOrigin().getCity().equalsIgnoreCase(ans) || e.getNodeDestiny().getCity().equalsIgnoreCase(ans)) {
+                        graph.getVertexList().remove(j);
+                        deleteFromDestinyBox(j);
+                        break;
+                    }
+                    j++;
+                }
+                if (init > graph.getVertexList().size()) {
+                    map2.paint(map2.getGraphics());
+                    graphics.paintAgainVertex((Graphics2D) map2.getGraphics(), graph.getVertexList());
+                    graphics.paintAgainEdges((Graphics2D) map2.getGraphics(), graph.getEdgesList());
+                }
+            }
+        } catch (Exception e) {
+
+        }
+
+
+    }//GEN-LAST:event_deleteButtonActionPerformed
+
+    private void deleteFromOriginBox(int i) {
+        originBox.removeItemAt(i);
+    }
+
+    private void deleteFromDestinyBox(int j) {
+        destinyBox.removeItemAt(j);
+    }
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -304,16 +329,15 @@ public class Frame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel backGroundPanel;
     private javax.swing.JLabel backgroundLabel;
+    private javax.swing.JButton deleteButton;
     private javax.swing.JComboBox<String> destinyBox;
     private javax.swing.JLabel destinyLabel;
-    private javax.swing.JButton floydButton;
     private javax.swing.JLabel helpLabel;
     private javax.swing.JPanel map;
     private javax.swing.JLabel map2;
     private javax.swing.JComboBox<String> originBox;
     private javax.swing.JLabel originLabel;
     private javax.swing.JButton price;
-    private javax.swing.JTextField priceField;
     private javax.swing.JLabel priceLabel;
     // End of variables declaration//GEN-END:variables
 }

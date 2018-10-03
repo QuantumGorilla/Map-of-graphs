@@ -8,10 +8,10 @@ package Data;
 public class Edge {
 
     
-    private Node origin, destiny;
+    private Vertex origin, destiny;
     private int distance;
 
-    public Edge(Node origin, Node destiny, int distance) {
+    public Edge(Vertex origin, Vertex destiny, int distance) {
         this.origin = origin;
         this.destiny = destiny;
         this.distance = distance;
@@ -25,19 +25,19 @@ public class Edge {
         this.distance = distance;
     }
 
-    public Node getNodeOrigin() {
+    public Vertex getNodeOrigin() {
         return origin;
     }
 
-    public void setNodeOrigin(Node origin) {
+    public void setNodeOrigin(Vertex origin) {
         this.origin = origin;
     }
 
-    public Node getNodeDestiny() {
+    public Vertex getNodeDestiny() {
         return destiny;
     }
 
-    public void setNodeDestiny(Node destiny) {
+    public void setNodeDestiny(Vertex destiny) {
         this.destiny = destiny;
     }
 

@@ -4,12 +4,12 @@ package Data;
  *
  * @author Alejandro
  */
-public class Node {
+public class Vertex {
 
     private String city, country;
     private int posX, posY;
 
-    public Node(int x, int y, String city, String country) {
+    public Vertex(int x, int y, String city, String country) {
         this.posX = x;
         this.posY = y;
         this.city = city;

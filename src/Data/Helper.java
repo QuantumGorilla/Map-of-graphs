@@ -8,9 +8,9 @@ import javax.swing.JOptionPane;
  */
 public class Helper {
 
-    public static int nodeCount = 0;
+    public static int vertexCount = 0;
     public static boolean primaryOcuppied = false;
-    public static int relationCount = 0;
+    public static int edgeCount = 0;
 
     public static String introduceCity() {
         return Helper.checkCityName(JOptionPane.showInputDialog(null, "Nombre de la ciudad", "Ciudad", JOptionPane.INFORMATION_MESSAGE));
@@ -49,16 +49,16 @@ public class Helper {
         JOptionPane.showMessageDialog(null, "Ya hay un vertice aquí", "Error", JOptionPane.ERROR_MESSAGE);
     }
 
-    public static void setPrimaryNode() {
+    public static void setPrimaryVertex() {
         primaryOcuppied = false;
     }
 
-    public static void plusOneNode() {
-        Helper.nodeCount++;
+    public static void plusOneVertex() {
+        Helper.vertexCount++;
     }
 
-    public static void plusOneRelation() {
-        Helper.relationCount++;
+    public static void plusOneEdge() {
+        Helper.edgeCount++;
     }
 
 }
