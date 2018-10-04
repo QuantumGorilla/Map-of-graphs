@@ -158,7 +158,7 @@ public class Frame extends javax.swing.JFrame {
         try {
             if (evt.getButton() == MouseEvent.BUTTON1) {
                 if (graph.getVertexList().isEmpty()) {
-                    helperVertex = graphics.answer(JOptionPane.showInputDialog(null, "Quieres añadir un lugar en esta posiciòn? Sí / No", "Añadir", JOptionPane.INFORMATION_MESSAGE), evt.getX(), evt.getY());
+                    helperVertex = graphics.answer(JOptionPane.showInputDialog(null, "Quieres añadir un lugar en esta posiciòn? Sí / No", "Añadir", JOptionPane.QUESTION_MESSAGE), evt.getX(), evt.getY());
                     if (helperVertex != null) {
                         graph.addVertex(helperVertex);
                         addVertexInComboBox();
@@ -169,7 +169,7 @@ public class Frame extends javax.swing.JFrame {
                     if (graphics.checkVertexPosition(graph.getVertexList(), evt.getX(), evt.getY())) {
                         Helper.errorMessage();
                     } else {
-                        helperVertex = graphics.answer(JOptionPane.showInputDialog(null, "Quieres añadir un lugar en esta posiciòn? Sí / No", "Añadir", JOptionPane.INFORMATION_MESSAGE), evt.getX(), evt.getY());
+                        helperVertex = graphics.answer(JOptionPane.showInputDialog(null, "Quieres añadir un lugar en esta posiciòn? Sí / No", "Añadir", JOptionPane.QUESTION_MESSAGE), evt.getX(), evt.getY());
                         if (helperVertex != null && graph.checkVertexList(helperVertex) != -1) {
                             graph.getVertexList().add(helperVertex);
                             addVertexInComboBox();
@@ -215,7 +215,8 @@ public class Frame extends javax.swing.JFrame {
             if (searchOriginVertex() != null && searchDestinyVertex() != null && distance != null) {
                 int priceDistance = distance[graph.getVertexList().indexOf(searchOriginVertex())][graph.getVertexList().indexOf(searchDestinyVertex())];
                 if (priceDistance == Graph.INF) {
-                    JOptionPane.showMessageDialog(null, "No puedes ir de " + searchOriginVertex().getCity() + " a " + searchDestinyVertex().getCity());
+                    JOptionPane.showMessageDialog(null, "No puedes ir de " + searchOriginVertex().getCity() + " a " + searchDestinyVertex().getCity(), "Ruta mínima", 
+                            JOptionPane.ERROR_MESSAGE);
                 } else {
                     JOptionPane.showMessageDialog(null, "La ruta mínima para ir de: " + originBox.getSelectedItem().toString()
                             + " a " + destinyBox.getSelectedItem().toString() + " cuesta " + priceDistance, "Ruta mínima", JOptionPane.INFORMATION_MESSAGE);
@@ -268,7 +269,6 @@ public class Frame extends javax.swing.JFrame {
                 deleteFromOriginBox(j);
                 deleteFromDestinyBox(j);
                 if (init > graph.getVertexList().size()) {
-                    map2.paint(map2.getGraphics());
                     paintAgainGraph();
                 }
             }
@@ -282,7 +282,6 @@ public class Frame extends javax.swing.JFrame {
     private void paintAgainGraph() {
         map2.revalidate();
         graphics.paintAgainVertex((Graphics2D) map2.getGraphics(), graph.getVertexList());
-        graphics.paintAgainEdges((Graphics2D) map2.getGraphics(), graph.getEdgesList());
     }
 
     private void deleteFromOriginBox(int i) {

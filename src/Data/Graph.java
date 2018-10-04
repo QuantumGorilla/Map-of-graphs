@@ -59,8 +59,8 @@ public class Graph {
         }
     }
 
-    public int[][] getDistanceMatrix(ArrayList<Vertex> nodes, ArrayList<Edge> edges) {
-        int matrix[][] = new int[nodes.size()][nodes.size()];
+    public int[][] getDistanceMatrix(ArrayList<Vertex> vertex, ArrayList<Edge> edges) {
+        int matrix[][] = new int[vertex.size()][vertex.size()];
         for (int i = 0; i < matrix.length; i++) {
             for (int j = 0; j < matrix.length; j++) {
                 if (i == j) {
@@ -71,7 +71,7 @@ public class Graph {
             }
         }
         edges.forEach((edge) -> {
-            matrix[nodes.indexOf(edge.getNodeOrigin())][nodes.indexOf(edge.getNodeDestiny())] = edge.getDistance();
+            matrix[vertex.indexOf(edge.getNodeOrigin())][vertex.indexOf(edge.getNodeDestiny())] = edge.getDistance();
         });
         return matrix;
     }

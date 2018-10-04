@@ -20,8 +20,8 @@ import javax.sound.sampled.UnsupportedAudioFileException;
  */
 public class Graphics {
 
-    public boolean checkVertexPosition(ArrayList<Vertex> nodes, int x, int y) {
-        for (Vertex n : nodes) {
+    public boolean checkVertexPosition(ArrayList<Vertex> vertex, int x, int y) {
+        for (Vertex n : vertex) {
             if (n.getPosX() + 30 >= x && n.getPosX() - 30 <= x && n.getPosY() + 30 >= y && n.getPosY() - 30 <= y) {
                 return true;
             }
@@ -29,9 +29,9 @@ public class Graphics {
         return false;
     }
 
-    public Vertex getVertexInPosition(ArrayList<Vertex> nodes, int x, int y) {
+    public Vertex getVertexInPosition(ArrayList<Vertex> vertex, int x, int y) {
         primaryOcuppied = true;
-        for (Vertex n : nodes) {
+        for (Vertex n : vertex) {
             if (n.getPosX() + 30 >= x && n.getPosX() - 30 <= x && n.getPosY() + 30 >= y && n.getPosY() - 30 <= y) {
                 return n;
             }
@@ -47,9 +47,9 @@ public class Graphics {
         return null;
     }
 
-    public Vertex originVertex(ArrayList<Vertex> nodes, int x, int y) {
-        if (checkVertexPosition(nodes, x, y) && !Helper.primaryOcuppied) {
-            Vertex a = getVertexInPosition(nodes, x, y);
+    public Vertex originVertex(ArrayList<Vertex> vertex, int x, int y) {
+        if (checkVertexPosition(vertex, x, y) && !Helper.primaryOcuppied) {
+            Vertex a = getVertexInPosition(vertex, x, y);
             JOptionPane.showMessageDialog(null, "Seleccionaste el vertice: " + a.getCity(), "Seleccion Exitosa", JOptionPane.INFORMATION_MESSAGE);
             return a;
         }
@@ -87,11 +87,8 @@ public class Graphics {
 
         g.setColor(Color.decode("#000"));
         g.setFont(new Font("Gadugi", Font.BOLD, 10));
-        if(origin.getPosX() > origin.getPosY()){
         g.drawString(String.valueOf(distance), ((origin.getPosX() + destiny.getPosX()) / 2) - 40, ((origin.getPosY() + destiny.getPosY()) / 2));
-        } else {
-            g.drawString(String.valueOf(distance), ((origin.getPosX() + destiny.getPosX()) / 2), ((origin.getPosY() + destiny.getPosY()) / 2) + 40);
-        }
+        g.drawString(String.valueOf(distance), ((origin.getPosX() + destiny.getPosX()) / 2), ((origin.getPosY() + destiny.getPosY()) / 2) + 40);
     }
 
     public void paintAgainVertex(Graphics2D g, ArrayList<Vertex> vertex) {
