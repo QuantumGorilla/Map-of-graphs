@@ -31,7 +31,7 @@ public class Frame extends javax.swing.JFrame {
         setTitle();
         setResize(false);
         setFavicon();
-        graphics.playMusic();
+        //graphics.playMusic();
     }
 
     private void setResize(boolean resize) {
@@ -170,11 +170,13 @@ public class Frame extends javax.swing.JFrame {
                         Helper.errorMessage();
                     } else {
                         helperVertex = graphics.answer(JOptionPane.showInputDialog(null, "Quieres añadir un lugar en esta posiciòn? Sí / No", "Añadir", JOptionPane.INFORMATION_MESSAGE), evt.getX(), evt.getY());
-                        if (helperVertex != null) {
+                        if (helperVertex != null && graph.checkVertexList(helperVertex) != -1) {
                             graph.getVertexList().add(helperVertex);
                             addVertexInComboBox();
                             paint((Graphics2D) map2.getGraphics(), graph.getVertexList().get(Helper.vertexCount));
                             Helper.plusOneVertex();
+                        } else {
+                            Helper.existingVertex();
                         }
                     }
                 }
@@ -258,11 +260,13 @@ public class Frame extends javax.swing.JFrame {
     private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
 
         try {
-            int i = 0, j = 0, init = graph.getVertexList().size();
+            int j, init = graph.getVertexList().size();
             String ans = JOptionPane.showInputDialog(null, "¿Cual vertice desea eliminar?", "Eliminar", JOptionPane.QUESTION_MESSAGE);
             if (!ans.isEmpty() && ans != null) {
-                graph.deleteVertex(ans);
-                graph.deleteVertex(ans);
+                j = graph.deleteVertex(ans);
+                graph.deleteEdge(ans);
+                deleteFromOriginBox(j);
+                deleteFromDestinyBox(j);
                 if (init > graph.getVertexList().size()) {
                     map2.paint(map2.getGraphics());
                     paintAgainGraph();
@@ -282,11 +286,15 @@ public class Frame extends javax.swing.JFrame {
     }
 
     private void deleteFromOriginBox(int i) {
-        originBox.removeItemAt(i);
+        if (i != -1) {
+            originBox.removeItemAt(i);
+        }
     }
 
     private void deleteFromDestinyBox(int j) {
-        destinyBox.removeItemAt(j);
+        if (j != -1) {
+            destinyBox.removeItemAt(j);
+        }
     }
 
     public static void main(String args[]) {

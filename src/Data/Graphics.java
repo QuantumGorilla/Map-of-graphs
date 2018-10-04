@@ -89,7 +89,11 @@ public class Graphics {
 
         g.setColor(Color.decode("#000"));
         g.setFont(new Font("Gadugi", Font.BOLD, 10));
-        g.drawString(String.valueOf(distance), ((origin.getPosX() + destiny.getPosX()) / 2), ((origin.getPosY() + destiny.getPosY()) / 2));
+        if(origin.getPosX() > origin.getPosY()){
+        g.drawString(String.valueOf(distance), ((origin.getPosX() + destiny.getPosX()) / 2) + 40, ((origin.getPosY() + destiny.getPosY()) / 2));
+        } else {
+            g.drawString(String.valueOf(distance), ((origin.getPosX() + destiny.getPosX()) / 2), ((origin.getPosY() + destiny.getPosY()) / 2) + 40);
+        }
     }
 
     public void paintAgainVertex(Graphics2D g, ArrayList<Vertex> vertex) {
@@ -114,7 +118,7 @@ public class Graphics {
             g.setColor(Color.decode("#e5bf23"));
             g.drawLine(e.getNodeOrigin().getPosX() + 25, e.getNodeOrigin().getPosY(), e.getNodeDestiny().getPosX() + 25, e.getNodeDestiny().getPosY());
 
-            g.setColor(Color.decode("#ff7e00"));
+            g.setColor(Color.decode("#000"));
             g.setFont(new Font("Georgia", Font.BOLD, 10));
             g.drawString(String.valueOf(e.getDistance()), ((e.getNodeOrigin().getPosX() + e.getNodeDestiny().getPosX()) / 2), ((e.getNodeOrigin().getPosY() + e.getNodeDestiny().getPosY()) / 2));
         }

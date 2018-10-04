@@ -28,14 +28,25 @@ public class Graph {
         return edges;
     }
 
-    public void deleteVertex(String ans) {
+    public int checkVertexList(Vertex v) {
+        for (Vertex e : vertex) {
+            if (v.getCity().equalsIgnoreCase(e.getCity())) {
+                return -1;
+            }
+        }
+        return 1;
+    }
+
+    public int deleteVertex(String ans) {
         int i = 0;
         for (Vertex v : vertex) {
             if (v.getCity().equalsIgnoreCase(ans)) {
                 vertex.remove(i);
+                return i;
             }
             i++;
         }
+        return -1;
     }
 
     public void deleteEdge(String ans) {

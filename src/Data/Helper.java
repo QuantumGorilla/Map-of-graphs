@@ -37,6 +37,10 @@ public class Helper {
     public static void errorMessage() {
         JOptionPane.showMessageDialog(null, "Ya hay un vertice aquí", "Error", JOptionPane.ERROR_MESSAGE);
     }
+    
+    public static void existingVertex(){
+        JOptionPane.showMessageDialog(null, "Está ciudad ya existe", "Vertice existente", JOptionPane.ERROR_MESSAGE);
+    }
 
     public static void setPrimaryVertex() {
         primaryOcuppied = false;
