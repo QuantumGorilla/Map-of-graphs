@@ -90,7 +90,7 @@ public class Graphics {
         g.setColor(Color.decode("#000"));
         g.setFont(new Font("Gadugi", Font.BOLD, 10));
         if(origin.getPosX() > origin.getPosY()){
-        g.drawString(String.valueOf(distance), ((origin.getPosX() + destiny.getPosX()) / 2) + 40, ((origin.getPosY() + destiny.getPosY()) / 2));
+        g.drawString(String.valueOf(distance), ((origin.getPosX() + destiny.getPosX()) / 2) - 40, ((origin.getPosY() + destiny.getPosY()) / 2));
         } else {
             g.drawString(String.valueOf(distance), ((origin.getPosX() + destiny.getPosX()) / 2), ((origin.getPosY() + destiny.getPosY()) / 2) + 40);
         }
