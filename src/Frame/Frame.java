@@ -31,7 +31,7 @@ public class Frame extends javax.swing.JFrame {
         setTitle();
         setResize(false);
         setFavicon();
-        //graphics.playMusic();
+        graphics.playMusic();
     }
 
     private void setResize(boolean resize) {
