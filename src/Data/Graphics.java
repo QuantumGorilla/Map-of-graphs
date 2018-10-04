@@ -48,9 +48,8 @@ public class Graphics {
     }
 
     public Vertex originVertex(ArrayList<Vertex> nodes, int x, int y) {
-        Vertex a;
         if (checkVertexPosition(nodes, x, y) && !Helper.primaryOcuppied) {
-            a = getVertexInPosition(nodes, x, y);
+            Vertex a = getVertexInPosition(nodes, x, y);
             JOptionPane.showMessageDialog(null, "Seleccionaste el vertice: " + a.getCity(), "Seleccion Exitosa", JOptionPane.INFORMATION_MESSAGE);
             return a;
         }
@@ -58,9 +57,8 @@ public class Graphics {
     }
 
     public Vertex destinyVertex(ArrayList<Vertex> nodes, int x, int y) {
-        Vertex b;
         if (checkVertexPosition(nodes, x, y)) {
-            b = getVertexInPosition(nodes, x, y);
+            Vertex b = getVertexInPosition(nodes, x, y);
             JOptionPane.showMessageDialog(null, "Seleccionaste el vertice: " + b.getCity(), "Seleccion Exitosa", JOptionPane.INFORMATION_MESSAGE);
             Helper.setPrimaryVertex();
             return b;

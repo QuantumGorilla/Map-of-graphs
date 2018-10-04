@@ -43,7 +43,7 @@ public class Frame extends javax.swing.JFrame {
     }
 
     private void setTitle() {
-        this.setTitle("Mapa de grafos");
+        this.setTitle("Mario World Navigator");
     }
 
     private void setScreenLocation() {
@@ -213,12 +213,12 @@ public class Frame extends javax.swing.JFrame {
             distance = graph.getDistanceMatrix(graph.getVertexList(), graph.getEdgesList());
             graph.floyd(distance);
             if (searchOriginVertex() != null && searchDestinyVertex() != null && distance != null) {
-                int price = distance[graph.getVertexList().indexOf(searchOriginVertex())][graph.getVertexList().indexOf(searchDestinyVertex())];
-                if (price == Graph.INF) {
+                int priceDistance = distance[graph.getVertexList().indexOf(searchOriginVertex())][graph.getVertexList().indexOf(searchDestinyVertex())];
+                if (priceDistance == Graph.INF) {
                     JOptionPane.showMessageDialog(null, "No puedes ir de " + searchOriginVertex().getCity() + " a " + searchDestinyVertex().getCity());
                 } else {
                     JOptionPane.showMessageDialog(null, "La ruta mínima para ir de: " + originBox.getSelectedItem().toString()
-                            + " a " + destinyBox.getSelectedItem().toString() + " cuesta " + price, "Ruta mínima", JOptionPane.INFORMATION_MESSAGE);
+                            + " a " + destinyBox.getSelectedItem().toString() + " cuesta " + priceDistance, "Ruta mínima", JOptionPane.INFORMATION_MESSAGE);
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "Selecciona dos ciudades en el combo box y presiona el boton de Floyd Warshall");
