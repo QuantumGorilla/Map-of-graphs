@@ -6,14 +6,13 @@ package Data;
  */
 public class Vertex {
 
-    private String city, country;
+    private String city;
     private int posX, posY;
 
-    public Vertex(int x, int y, String city, String country) {
+    public Vertex(int x, int y, String city) {
         this.posX = x;
         this.posY = y;
         this.city = city;
-        this.country = country;
     }
 
     public int getPosX() {
@@ -38,14 +37,6 @@ public class Vertex {
 
     public void setCity(String city) {
         this.city = city;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
     }
 
 }

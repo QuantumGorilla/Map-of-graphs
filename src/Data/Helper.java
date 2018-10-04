@@ -23,17 +23,6 @@ public class Helper {
         return city;
     }
 
-    public static String introduceCountry() {
-        return Helper.checkCountryName(JOptionPane.showInputDialog(null, "Nombre del país", "Pais", JOptionPane.INFORMATION_MESSAGE));
-    }
-
-    private static String checkCountryName(String country) {
-        while (country.isEmpty()) {
-            country = JOptionPane.showInputDialog(null, "Nombre del país", "Pais", JOptionPane.INFORMATION_MESSAGE);
-        }
-        return country;
-    }
-
     public static int introduceDistance() {
         return Helper.checkDistance(JOptionPane.showInputDialog(null, "Valor entre los vertice", "Distancia", JOptionPane.INFORMATION_MESSAGE));
     }

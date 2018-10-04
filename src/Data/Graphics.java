@@ -42,8 +42,7 @@ public class Graphics {
     public Vertex answer(String ans, int x, int y) {
         if (ans.equalsIgnoreCase("Si") && !ans.isEmpty()) {
             String city = Helper.introduceCity();
-            String country = Helper.introduceCountry();
-            return new Vertex(x, y, city, country);
+            return new Vertex(x, y, city);
         }
         return null;
     }

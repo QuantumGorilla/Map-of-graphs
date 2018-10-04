@@ -31,7 +31,7 @@ public class Frame extends javax.swing.JFrame {
         setTitle();
         setResize(false);
         setFavicon();
-        graphics.playMusic();
+        //graphics.playMusic();
     }
 
     private void setResize(boolean resize) {
@@ -201,8 +201,8 @@ public class Frame extends javax.swing.JFrame {
     }//GEN-LAST:event_map2MouseClicked
 
     private void addVertexInComboBox() {
-        destinyBox.insertItemAt(graph.getVertexList().get(Helper.vertexCount).getCity() + "/" + graph.getVertexList().get(Helper.vertexCount).getCountry(), Helper.vertexCount);
-        originBox.insertItemAt(graph.getVertexList().get(Helper.vertexCount).getCity() + "/" + graph.getVertexList().get(Helper.vertexCount).getCountry(), Helper.vertexCount);
+        originBox.insertItemAt(graph.getVertexList().get(Helper.vertexCount).getCity(), Helper.vertexCount);
+        destinyBox.insertItemAt(graph.getVertexList().get(Helper.vertexCount).getCity(), Helper.vertexCount);
     }
 
     private void priceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_priceActionPerformed
@@ -229,7 +229,7 @@ public class Frame extends javax.swing.JFrame {
 
     private Vertex searchOriginVertex() {
         for (Vertex v : graph.getVertexList()) {
-            if (originBox.getSelectedItem().toString().equalsIgnoreCase(v.getCity() + "/" + v.getCountry())) {
+            if (originBox.getSelectedItem().toString().equalsIgnoreCase(v.getCity())) {
                 return v;
             }
         }
@@ -238,7 +238,7 @@ public class Frame extends javax.swing.JFrame {
 
     private Vertex searchDestinyVertex() {
         for (Vertex v : graph.getVertexList()) {
-            if (destinyBox.getSelectedItem().toString().equalsIgnoreCase(v.getCity() + "/" + v.getCountry())) {
+            if (destinyBox.getSelectedItem().toString().equalsIgnoreCase(v.getCity())) {
                 return v;
             }
         }
@@ -261,27 +261,11 @@ public class Frame extends javax.swing.JFrame {
             int i = 0, j = 0, init = graph.getVertexList().size();
             String ans = JOptionPane.showInputDialog(null, "¿Cual vertice desea eliminar?", "Eliminar", JOptionPane.QUESTION_MESSAGE);
             if (!ans.isEmpty() && ans != null) {
-                for (Vertex v : graph.getVertexList()) {
-                    if (v.getCity().equalsIgnoreCase(ans)) {
-                        graph.getVertexList().remove(i);
-                        deleteFromOriginBox(i);
-                        deleteFromDestinyBox(j);
-                        break;
-                    }
-                    i++;
-                }
-                for (Edge e : graph.getEdgesList()) {
-                    if (e.getNodeOrigin().getCity().equalsIgnoreCase(ans) || e.getNodeDestiny().getCity().equalsIgnoreCase(ans)) {
-                        graph.getVertexList().remove(j);
-                        deleteFromDestinyBox(j);
-                        break;
-                    }
-                    j++;
-                }
+                graph.deleteVertex(ans);
+                graph.deleteVertex(ans);
                 if (init > graph.getVertexList().size()) {
                     map2.paint(map2.getGraphics());
-                    graphics.paintAgainVertex((Graphics2D) map2.getGraphics(), graph.getVertexList());
-                    graphics.paintAgainEdges((Graphics2D) map2.getGraphics(), graph.getEdgesList());
+                    paintAgainGraph();
                 }
             }
         } catch (Exception e) {
@@ -290,6 +274,12 @@ public class Frame extends javax.swing.JFrame {
 
 
     }//GEN-LAST:event_deleteButtonActionPerformed
+
+    private void paintAgainGraph() {
+        map2.revalidate();
+        graphics.paintAgainVertex((Graphics2D) map2.getGraphics(), graph.getVertexList());
+        graphics.paintAgainEdges((Graphics2D) map2.getGraphics(), graph.getEdgesList());
+    }
 
     private void deleteFromOriginBox(int i) {
         originBox.removeItemAt(i);

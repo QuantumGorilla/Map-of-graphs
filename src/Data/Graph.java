@@ -11,21 +11,41 @@ public class Graph {
     public final static int INF = 99999;
     private ArrayList<Vertex> vertex = new ArrayList<>();
     private ArrayList<Edge> edges = new ArrayList<>();
-    
-    public void addVertex(Vertex v){
+
+    public void addVertex(Vertex v) {
         vertex.add(v);
     }
-    
-    public ArrayList<Vertex> getVertexList(){
+
+    public ArrayList<Vertex> getVertexList() {
         return vertex;
     }
-    
-    public void addEdge(Edge e){
+
+    public void addEdge(Edge e) {
         edges.add(e);
     }
-    
-    public ArrayList<Edge> getEdgesList(){
+
+    public ArrayList<Edge> getEdgesList() {
         return edges;
+    }
+
+    public void deleteVertex(String ans) {
+        int i = 0;
+        for (Vertex v : vertex) {
+            if (v.getCity().equalsIgnoreCase(ans)) {
+                vertex.remove(i);
+            }
+            i++;
+        }
+    }
+
+    public void deleteEdge(String ans) {
+        int i = 0;
+        for (Edge e : edges) {
+            if (e.getNodeOrigin().getCity().equalsIgnoreCase(ans) || e.getNodeDestiny().getCity().equalsIgnoreCase(ans)) {
+                edges.remove(i);
+            }
+            i++;
+        }
     }
 
     public int[][] getDistanceMatrix(ArrayList<Vertex> nodes, ArrayList<Edge> edges) {
