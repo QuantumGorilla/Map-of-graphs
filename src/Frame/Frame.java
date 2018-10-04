@@ -16,7 +16,7 @@ import javax.swing.JOptionPane;
  */
 public class Frame extends javax.swing.JFrame {
 
-    private Graph graph;
+    private final Graph graph;
     private int[][] distance;
     private Vertex origin;
     private Vertex destiny;
@@ -31,7 +31,7 @@ public class Frame extends javax.swing.JFrame {
         setTitle();
         setResize(false);
         setFavicon();
-        //graphics.playMusic();
+        graphics.playMusic();
     }
 
     private void setResize(boolean resize) {
@@ -250,7 +250,7 @@ public class Frame extends javax.swing.JFrame {
     private void helpLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_helpLabelMouseClicked
 
         JOptionPane.showMessageDialog(null, "Para agregar vertices presiona click izquierdo"
-                + " en el mapa. Para agregar aristas de un vertice a otro presiona click derecho"
+                + " en el mapa. \nPara agregar aristas de un vertice a otro presiona click derecho"
                 + ", primero presiona en el vertice origen y luego en el vertice destino."
                 + "\nPara calcular la ruta mínima utiliza el comboBox y selecciona la ciudad origen y la destino,"
                 + " luego presiona el boton de floyd warshall y luego en la moneda.", "Ayuda", JOptionPane.INFORMATION_MESSAGE);
@@ -286,15 +286,11 @@ public class Frame extends javax.swing.JFrame {
     }
 
     private void deleteFromOriginBox(int i) {
-        if (i != -1) {
-            originBox.removeItemAt(i);
-        }
+        if (i != -1) originBox.removeItemAt(i);
     }
 
     private void deleteFromDestinyBox(int j) {
-        if (j != -1) {
-            destinyBox.removeItemAt(j);
-        }
+        if (j != -1) destinyBox.removeItemAt(j);
     }
 
     public static void main(String args[]) {
