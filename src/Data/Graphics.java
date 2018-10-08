@@ -69,25 +69,43 @@ public class Graphics {
     public void paintVertex(Graphics2D g, Vertex n) {
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g.setStroke(new BasicStroke(3));
-        g.setColor(Color.decode("#304fb5"));
+        g.setColor(Color.decode("#B80C09"));
         g.fillOval(n.getPosX() - 20, n.getPosY() - 20, 45, 35);
-        g.setColor(Color.decode("#80da03"));
+        g.setColor(Color.decode("#FEC601"));
         g.drawOval(n.getPosX() - 20, n.getPosY() - 20, 45, 35);
 
         g.setColor(Color.BLACK);
         g.setFont(new Font("Gadugi", Font.BOLD, 10));
-        g.drawString(n.getCity(), n.getPosX() - 20, n.getPosY());
+        g.drawString(n.getCity(), n.getPosX()-5, n.getPosY());
     }
 
     public void paintDistance(Graphics2D g, Vertex origin, Vertex destiny, int distance) {
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g.setStroke(new BasicStroke(3));
-        g.setColor(Color.decode("#e5bf23"));
+        g.setColor(Color.decode("#F5BB00"));
         g.drawLine(origin.getPosX() + 25, origin.getPosY(), destiny.getPosX() + 25, destiny.getPosY());
 
         g.setColor(Color.decode("#000"));
         g.setFont(new Font("Gadugi", Font.BOLD, 10));
-        g.drawString(String.valueOf(distance), ((origin.getPosX() + destiny.getPosX()) / 2), ((origin.getPosY() + destiny.getPosY()) / 2));
+        g.drawString(String.valueOf(distance), ((origin.getPosX() + destiny.getPosX()) / 2), ((origin.getPosY() + destiny.getPosY()) / 2) + 10);
+    }
+
+    public void paintMinPath(Graphics2D g, ArrayList<Edge> minRoute) {
+        if (!minRoute.isEmpty()) {
+            minRoute.forEach((r) -> {
+                paintMinimun(g, r.getOriginVertex(), r.getDestinyVertex(), r.getDistance());
+            });
+        }
+    }
+
+    private void paintMinimun(Graphics2D g, Vertex origin, Vertex destiny, int distance) {
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g.setStroke(new BasicStroke(3));
+        g.setColor(Color.decode("#D00000"));
+        g.drawLine(origin.getPosX() + 25, origin.getPosY(), destiny.getPosX() + 25, destiny.getPosY());
+
+        g.setColor(Color.decode("#D00000"));
+        g.setFont(new Font("Gadugi", Font.BOLD, 10));
         g.drawString(String.valueOf(distance), ((origin.getPosX() + destiny.getPosX()) / 2), ((origin.getPosY() + destiny.getPosY()) / 2));
     }
 

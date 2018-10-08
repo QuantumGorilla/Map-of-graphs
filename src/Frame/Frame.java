@@ -6,8 +6,9 @@ import Data.Graph;
 import Data.Helper;
 import Data.Vertex;
 import java.awt.Graphics2D;
+import java.awt.HeadlessException;
 import java.awt.event.MouseEvent;
-import java.util.Arrays;
+import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
@@ -17,12 +18,15 @@ import javax.swing.JOptionPane;
  */
 public class Frame extends javax.swing.JFrame {
 
+    private ArrayList<Edge> minRoute = new ArrayList<>();
     private Graph graph;
     private int[][] distance;
+    private int[][] route;
     private Vertex origin;
     private Vertex destiny;
     private Vertex helperVertex;
-    private Graphics graphics;
+    private final Graphics graphics;
+    private java.awt.Graphics g;
 
     public Frame() {
         initComponents();
@@ -204,8 +208,8 @@ public class Frame extends javax.swing.JFrame {
                     }
                 }
             }
-        } catch (Exception e) {
-
+        } catch (HeadlessException e) {
+            Helper.emptyJOptionPane();
         }
     }//GEN-LAST:event_map2MouseClicked
 
@@ -218,9 +222,9 @@ public class Frame extends javax.swing.JFrame {
 
         try {
             distance = graph.getDistanceMatrix(graph.vertex, graph.edges);
-            graph.floyd(distance);
+            route = graph.getPathMatrix(graph.vertex);
+            graph.floyd(distance, route);
             if (searchOriginVertex() != null && searchDestinyVertex() != null && distance != null) {
-                System.out.println("Hola" + Arrays.deepToString(distance));
                 int priceDistance = distance[graph.vertex.indexOf(searchOriginVertex())][graph.vertex.indexOf(searchDestinyVertex())];
                 if (priceDistance == Graph.INF) {
                     JOptionPane.showMessageDialog(null, "No puedes ir de " + searchOriginVertex().getCity() + " a " + searchDestinyVertex().getCity(), "Ruta mínima",
@@ -228,12 +232,14 @@ public class Frame extends javax.swing.JFrame {
                 } else {
                     JOptionPane.showMessageDialog(null, "La ruta mínima para ir de: " + originBox.getSelectedItem().toString()
                             + " a " + destinyBox.getSelectedItem().toString() + " cuesta " + priceDistance, "Ruta mínima", JOptionPane.INFORMATION_MESSAGE);
+                    minRoute = graph.getMinRoute(searchOriginVertex(), searchDestinyVertex(), route);
+                    graphics.paintMinPath((Graphics2D) map2.getGraphics(), minRoute);
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "Selecciona dos ciudades en el combo box y presiona el boton de Floyd Warshall");
             }
-        } catch (Exception e) {
-
+        } catch (HeadlessException e) {
+            Helper.emptyJOptionPane();
         }
 
     }//GEN-LAST:event_priceActionPerformed
@@ -258,38 +264,32 @@ public class Frame extends javax.swing.JFrame {
 
     private void helpLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_helpLabelMouseClicked
 
-        JOptionPane.showMessageDialog(null, "Para agregar vertices presiona click izquierdo"
-                + " en el mapa. \nPara agregar aristas de un vertice a otro presiona click derecho"
-                + ", primero presiona en el vertice origen y luego en el vertice destino."
-                + "\nPara calcular la ruta mínima utiliza el comboBox y selecciona la ciudad origen y la destino,"
-                + " luego presiona el boton de floyd warshall y luego en la moneda.", "Ayuda", JOptionPane.INFORMATION_MESSAGE);
+        Helper.helpMessage();
 
     }//GEN-LAST:event_helpLabelMouseClicked
 
     private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
 
         try {
-            java.awt.Graphics g = getGraphics();
+            g = getGraphics();
             String ans = JOptionPane.showInputDialog(null, "¿Cual vertice desea eliminar?", "Eliminar", JOptionPane.QUESTION_MESSAGE);
             if (!ans.isEmpty()) {
                 removeFromBoxes(ans);
                 graph.deleteEdges(ans);
-                graph.deleteEdges(ans);
                 graph.deleteVertex(ans);
+                Helper.minusOneVertex();
                 super.paint(g);
-                paintGraphAgain();
+                repaintGraph();
             }
-        } catch (Exception e) {
-
+        } catch (HeadlessException e) {
+            Helper.emptyJOptionPane();
         }
 
 
     }//GEN-LAST:event_deleteButtonActionPerformed
 
-    private void paintGraphAgain() {
-        map2.revalidate();
+    private void repaintGraph() {
         graph.vertex.forEach((v) -> {
-            System.out.println(v.getCity());
             graphics.paintVertex((Graphics2D) map2.getGraphics(), v);
         });
         if (!graph.edges.isEmpty()) {

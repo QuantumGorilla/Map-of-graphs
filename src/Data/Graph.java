@@ -40,11 +40,17 @@ public class Graph {
     }
 
     public void deleteEdges(String ans) {
+        ArrayList<Edge> helper = new ArrayList<>();
         for (int i = 0; i < edges.size(); i++) {
             if (edges.get(i).getOriginVertex().getCity().equalsIgnoreCase(ans) || edges.get(i).getDestinyVertex().getCity().equalsIgnoreCase(ans)) {
-                edges.remove(i);
+                helper.add(edges.get(i));
             }
         }
+
+        helper.forEach((e) -> {
+            Helper.minusOneEdge();
+            edges.remove(e);
+        });
     }
 
     public int[][] getDistanceMatrix(ArrayList<Vertex> vertex, ArrayList<Edge> edges) {
@@ -64,16 +70,48 @@ public class Graph {
         return matrix;
     }
 
-    public void floyd(int[][] adj) {
+    public int[][] getPathMatrix(ArrayList<Vertex> vertex) {
+        int matrix[][] = new int[vertex.size()][vertex.size()];
+        for (int i = 0; i < vertex.size(); i++) {
+            for (int j = 0; j < vertex.size(); j++) {
+                matrix[i][j] = j;
+            }
+        }
+        return matrix;
+    }
+
+    public void floyd(int[][] adj, int[][] minRoute) {
         for (int k = 0; k < adj.length; k++) {
             for (int i = 0; i < adj.length; i++) {
                 for (int j = 0; j < adj.length; j++) {
                     if (adj[i][k] + adj[k][j] < adj[i][j]) {
                         adj[i][j] = adj[i][k] + adj[k][j];
+                        minRoute[i][j] = minRoute[i][k];
                     }
                 }
             }
         }
     }
 
+    public ArrayList<Edge> getMinRoute(Vertex origin, Vertex destiny, int[][] route) {
+        ArrayList<Edge> minRoute = new ArrayList<>();
+        int begin = vertex.indexOf(origin);
+        int end = vertex.indexOf(destiny);
+        while (begin != end) {
+            begin = route[begin][end];
+            Vertex path = vertex.get(end);
+            minRoute.add(getNextVertex(origin, destiny));
+            origin = path;
+        }
+        return minRoute;
+    }
+
+    public Edge getNextVertex(Vertex origin, Vertex destiny) {
+        for (Edge e : edges) {
+            if (e.getOriginVertex() == origin && e.getDestinyVertex() == destiny) {
+                return e;
+            }
+        }
+        return null;
+    }
 }
