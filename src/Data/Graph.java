@@ -1,6 +1,7 @@
 package Data;
 
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -9,23 +10,15 @@ import java.util.ArrayList;
 public class Graph {
 
     public final static int INF = 99999;
-    private ArrayList<Vertex> vertex = new ArrayList<>();
-    private ArrayList<Edge> edges = new ArrayList<>();
+    public ArrayList<Vertex> vertex = new ArrayList<>();
+    public ArrayList<Edge> edges = new ArrayList<>();
 
     public void addVertex(Vertex v) {
         vertex.add(v);
     }
 
-    public ArrayList<Vertex> getVertexList() {
-        return vertex;
-    }
-
     public void addEdge(Edge e) {
         edges.add(e);
-    }
-
-    public ArrayList<Edge> getEdgesList() {
-        return edges;
     }
 
     public int checkVertexList(Vertex v) {
@@ -37,25 +30,20 @@ public class Graph {
         return 1;
     }
 
-    public int deleteVertex(String ans) {
-        int i = 0;
-        for (Vertex v : vertex) {
-            if (v.getCity().equalsIgnoreCase(ans)) {
+    public void deleteVertex(String ans) {
+        for (int i = 0; i < vertex.size(); i++) {
+            if (ans.equalsIgnoreCase(vertex.get(i).getCity())) {
+                JOptionPane.showMessageDialog(null, "Borrado exitoso", "Exito", JOptionPane.INFORMATION_MESSAGE);
                 vertex.remove(i);
-                return i;
             }
-            i++;
         }
-        return -1;
     }
 
-    public void deleteEdge(String ans) {
-        int i = 0;
-        for (Edge e : edges) {
-            if (e.getNodeOrigin().getCity().equalsIgnoreCase(ans) || e.getNodeDestiny().getCity().equalsIgnoreCase(ans)) {
+    public void deleteEdges(String ans) {
+        for (int i = 0; i < edges.size(); i++) {
+            if (edges.get(i).getOriginVertex().getCity().equalsIgnoreCase(ans) || edges.get(i).getDestinyVertex().getCity().equalsIgnoreCase(ans)) {
                 edges.remove(i);
             }
-            i++;
         }
     }
 
@@ -71,7 +59,7 @@ public class Graph {
             }
         }
         edges.forEach((edge) -> {
-            matrix[vertex.indexOf(edge.getNodeOrigin())][vertex.indexOf(edge.getNodeDestiny())] = edge.getDistance();
+            matrix[vertex.indexOf(edge.getOriginVertex())][vertex.indexOf(edge.getDestinyVertex())] = edge.getDistance();
         });
         return matrix;
     }

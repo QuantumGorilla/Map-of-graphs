@@ -7,6 +7,7 @@ import Data.Helper;
 import Data.Vertex;
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
+import java.util.Arrays;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
@@ -16,12 +17,12 @@ import javax.swing.JOptionPane;
  */
 public class Frame extends javax.swing.JFrame {
 
-    private final Graph graph;
+    private Graph graph;
     private int[][] distance;
     private Vertex origin;
     private Vertex destiny;
     private Vertex helperVertex;
-    private final Graphics graphics;
+    private Graphics graphics;
 
     public Frame() {
         initComponents();
@@ -52,7 +53,7 @@ public class Frame extends javax.swing.JFrame {
 
     private void paint(Graphics2D g, Vertex n) {
         map2.revalidate();
-        graphics.paint(g, n);
+        graphics.paintVertex(g, n);
     }
 
     private void paintDistance(Graphics2D g, Vertex origin, Vertex destiny, int distance) {
@@ -157,43 +158,49 @@ public class Frame extends javax.swing.JFrame {
 
         try {
             if (evt.getButton() == MouseEvent.BUTTON1) {
-                if (graph.getVertexList().isEmpty()) {
+                if (graph.vertex.isEmpty()) {
                     helperVertex = graphics.answer(JOptionPane.showInputDialog(null, "Quieres añadir un lugar en esta posiciòn? Sí / No", "Añadir", JOptionPane.QUESTION_MESSAGE), evt.getX(), evt.getY());
                     if (helperVertex != null) {
                         graph.addVertex(helperVertex);
                         addVertexInComboBox();
-                        paint((Graphics2D) map2.getGraphics(), graph.getVertexList().get(Helper.vertexCount));
+                        paint((Graphics2D) map2.getGraphics(), graph.vertex.get(Helper.vertexCount));
                         Helper.plusOneVertex();
                     }
                 } else {
-                    if (graphics.checkVertexPosition(graph.getVertexList(), evt.getX(), evt.getY())) {
+                    if (graphics.checkVertexPosition(graph.vertex, evt.getX(), evt.getY())) {
                         Helper.errorMessage();
                     } else {
                         helperVertex = graphics.answer(JOptionPane.showInputDialog(null, "Quieres añadir un lugar en esta posiciòn? Sí / No", "Añadir", JOptionPane.QUESTION_MESSAGE), evt.getX(), evt.getY());
                         if (helperVertex != null && graph.checkVertexList(helperVertex) != -1) {
-                            graph.getVertexList().add(helperVertex);
+                            graph.vertex.add(helperVertex);
                             addVertexInComboBox();
-                            paint((Graphics2D) map2.getGraphics(), graph.getVertexList().get(Helper.vertexCount));
+                            paint((Graphics2D) map2.getGraphics(), graph.vertex.get(Helper.vertexCount));
                             Helper.plusOneVertex();
                         } else {
-                            Helper.existingVertex();
+                            if (graph.checkVertexList(helperVertex) == -1) {
+                                Helper.existingVertex();
+                            }
                         }
                     }
                 }
             } else {
                 if (evt.getButton() == MouseEvent.BUTTON3) {
                     if (!Helper.primaryOcuppied) {
-                        origin = graphics.originVertex(graph.getVertexList(), evt.getX(), evt.getY());
+                        origin = graphics.originVertex(graph.vertex, evt.getX(), evt.getY());
                     } else {
-                        destiny = graphics.destinyVertex(graph.getVertexList(), evt.getX(), evt.getY());
+                        destiny = graphics.destinyVertex(graph.vertex, evt.getX(), evt.getY());
                         Helper.setPrimaryVertex();
                     }
-                    if (origin != null && destiny != null) {
-                        graph.getEdgesList().add(new Edge(origin, destiny, Helper.introduceDistance()));
-                        paintDistance((Graphics2D) map2.getGraphics(), graph.getEdgesList().get(Helper.edgeCount).getNodeOrigin(), graph.getEdgesList().get(Helper.edgeCount).getNodeDestiny(),
-                                graph.getEdgesList().get(Helper.edgeCount).getDistance());
+                    if (origin != null && destiny != null && origin != destiny) {
+                        graph.edges.add(new Edge(origin, destiny, Helper.introduceDistance()));
+                        paintDistance((Graphics2D) map2.getGraphics(), graph.edges.get(Helper.edgeCount).getOriginVertex(), graph.edges.get(Helper.edgeCount).getDestinyVertex(),
+                                graph.edges.get(Helper.edgeCount).getDistance());
                         Helper.plusOneEdge();
                         origin = destiny = null;
+                    } else {
+                        if (origin == destiny) {
+                            Helper.errorSameVertex();
+                        }
                     }
                 }
             }
@@ -203,19 +210,20 @@ public class Frame extends javax.swing.JFrame {
     }//GEN-LAST:event_map2MouseClicked
 
     private void addVertexInComboBox() {
-        originBox.insertItemAt(graph.getVertexList().get(Helper.vertexCount).getCity(), Helper.vertexCount);
-        destinyBox.insertItemAt(graph.getVertexList().get(Helper.vertexCount).getCity(), Helper.vertexCount);
+        originBox.insertItemAt(graph.vertex.get(Helper.vertexCount).getCity(), Helper.vertexCount);
+        destinyBox.insertItemAt(graph.vertex.get(Helper.vertexCount).getCity(), Helper.vertexCount);
     }
 
     private void priceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_priceActionPerformed
 
         try {
-            distance = graph.getDistanceMatrix(graph.getVertexList(), graph.getEdgesList());
+            distance = graph.getDistanceMatrix(graph.vertex, graph.edges);
             graph.floyd(distance);
             if (searchOriginVertex() != null && searchDestinyVertex() != null && distance != null) {
-                int priceDistance = distance[graph.getVertexList().indexOf(searchOriginVertex())][graph.getVertexList().indexOf(searchDestinyVertex())];
+                System.out.println("Hola" + Arrays.deepToString(distance));
+                int priceDistance = distance[graph.vertex.indexOf(searchOriginVertex())][graph.vertex.indexOf(searchDestinyVertex())];
                 if (priceDistance == Graph.INF) {
-                    JOptionPane.showMessageDialog(null, "No puedes ir de " + searchOriginVertex().getCity() + " a " + searchDestinyVertex().getCity(), "Ruta mínima", 
+                    JOptionPane.showMessageDialog(null, "No puedes ir de " + searchOriginVertex().getCity() + " a " + searchDestinyVertex().getCity(), "Ruta mínima",
                             JOptionPane.ERROR_MESSAGE);
                 } else {
                     JOptionPane.showMessageDialog(null, "La ruta mínima para ir de: " + originBox.getSelectedItem().toString()
@@ -231,7 +239,7 @@ public class Frame extends javax.swing.JFrame {
     }//GEN-LAST:event_priceActionPerformed
 
     private Vertex searchOriginVertex() {
-        for (Vertex v : graph.getVertexList()) {
+        for (Vertex v : graph.vertex) {
             if (originBox.getSelectedItem().toString().equalsIgnoreCase(v.getCity())) {
                 return v;
             }
@@ -240,7 +248,7 @@ public class Frame extends javax.swing.JFrame {
     }
 
     private Vertex searchDestinyVertex() {
-        for (Vertex v : graph.getVertexList()) {
+        for (Vertex v : graph.vertex) {
             if (destinyBox.getSelectedItem().toString().equalsIgnoreCase(v.getCity())) {
                 return v;
             }
@@ -261,16 +269,15 @@ public class Frame extends javax.swing.JFrame {
     private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
 
         try {
-            int j, init = graph.getVertexList().size();
+            java.awt.Graphics g = getGraphics();
             String ans = JOptionPane.showInputDialog(null, "¿Cual vertice desea eliminar?", "Eliminar", JOptionPane.QUESTION_MESSAGE);
-            if (!ans.isEmpty() && ans != null) {
-                j = graph.deleteVertex(ans);
-                graph.deleteEdge(ans);
-                deleteFromOriginBox(j);
-                deleteFromDestinyBox(j);
-                if (init > graph.getVertexList().size()) {
-                    paintAgainGraph();
-                }
+            if (!ans.isEmpty()) {
+                removeFromBoxes(ans);
+                graph.deleteEdges(ans);
+                graph.deleteEdges(ans);
+                graph.deleteVertex(ans);
+                super.paint(g);
+                paintGraphAgain();
             }
         } catch (Exception e) {
 
@@ -279,17 +286,22 @@ public class Frame extends javax.swing.JFrame {
 
     }//GEN-LAST:event_deleteButtonActionPerformed
 
-    private void paintAgainGraph() {
+    private void paintGraphAgain() {
         map2.revalidate();
-        graphics.paintAgainVertex((Graphics2D) map2.getGraphics(), graph.getVertexList());
+        graph.vertex.forEach((v) -> {
+            System.out.println(v.getCity());
+            graphics.paintVertex((Graphics2D) map2.getGraphics(), v);
+        });
+        if (!graph.edges.isEmpty()) {
+            graph.edges.forEach((e) -> {
+                graphics.paintDistance((Graphics2D) map2.getGraphics(), e.getOriginVertex(), e.getDestinyVertex(), e.getDistance());
+            });
+        }
     }
 
-    private void deleteFromOriginBox(int i) {
-        if (i != -1) originBox.removeItemAt(i);
-    }
-
-    private void deleteFromDestinyBox(int j) {
-        if (j != -1) destinyBox.removeItemAt(j);
+    private void removeFromBoxes(String ans) {
+        originBox.removeItem(ans);
+        destinyBox.removeItem(ans);
     }
 
     public static void main(String args[]) {

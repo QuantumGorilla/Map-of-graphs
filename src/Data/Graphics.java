@@ -66,7 +66,7 @@ public class Graphics {
         return null;
     }
 
-    public void paint(Graphics2D g, Vertex n) {
+    public void paintVertex(Graphics2D g, Vertex n) {
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g.setStroke(new BasicStroke(3));
         g.setColor(Color.decode("#304fb5"));
@@ -87,36 +87,8 @@ public class Graphics {
 
         g.setColor(Color.decode("#000"));
         g.setFont(new Font("Gadugi", Font.BOLD, 10));
-        g.drawString(String.valueOf(distance), ((origin.getPosX() + destiny.getPosX()) / 2) - 40, ((origin.getPosY() + destiny.getPosY()) / 2));
-        g.drawString(String.valueOf(distance), ((origin.getPosX() + destiny.getPosX()) / 2), ((origin.getPosY() + destiny.getPosY()) / 2) + 40);
-    }
-
-    public void paintAgainVertex(Graphics2D g, ArrayList<Vertex> vertex) {
-        for (Vertex v : vertex) {
-            g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            g.setStroke(new BasicStroke(2));
-            g.setColor(Color.decode("#304fb5"));
-            g.fillOval(v.getPosX() - 20, v.getPosY() - 20, 45, 35);
-            g.setColor(Color.decode("#80da03"));
-            g.drawOval(v.getPosX() - 20, v.getPosY() - 20, 45, 35);
-
-            g.setColor(Color.BLACK);
-            g.setFont(new Font("Georgia", Font.BOLD, 10));
-            g.drawString(v.getCity(), v.getPosX() - 20, v.getPosY());
-        }
-    }
-
-    public void paintAgainEdges(Graphics2D g, ArrayList<Edge> edges) {
-        for (Edge e : edges) {
-            g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            g.setStroke(new BasicStroke(3));
-            g.setColor(Color.decode("#e5bf23"));
-            g.drawLine(e.getNodeOrigin().getPosX() + 25, e.getNodeOrigin().getPosY(), e.getNodeDestiny().getPosX() + 25, e.getNodeDestiny().getPosY());
-
-            g.setColor(Color.decode("#000"));
-            g.setFont(new Font("Georgia", Font.BOLD, 10));
-            g.drawString(String.valueOf(e.getDistance()), ((e.getNodeOrigin().getPosX() + e.getNodeDestiny().getPosX()) / 2), ((e.getNodeOrigin().getPosY() + e.getNodeDestiny().getPosY()) / 2));
-        }
+        g.drawString(String.valueOf(distance), ((origin.getPosX() + destiny.getPosX()) / 2), ((origin.getPosY() + destiny.getPosY()) / 2));
+        g.drawString(String.valueOf(distance), ((origin.getPosX() + destiny.getPosX()) / 2), ((origin.getPosY() + destiny.getPosY()) / 2));
     }
 
     public void playMusic() {

@@ -25,7 +25,7 @@ public class Edge {
         this.distance = distance;
     }
 
-    public Vertex getNodeOrigin() {
+    public Vertex getOriginVertex() {
         return origin;
     }
 
@@ -33,7 +33,7 @@ public class Edge {
         this.origin = origin;
     }
 
-    public Vertex getNodeDestiny() {
+    public Vertex getDestinyVertex() {
         return destiny;
     }
 

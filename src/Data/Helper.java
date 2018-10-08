@@ -41,6 +41,10 @@ public class Helper {
     public static void existingVertex(){
         JOptionPane.showMessageDialog(null, "Está ciudad ya existe", "Vertice existente", JOptionPane.ERROR_MESSAGE);
     }
+    
+    public static void errorSameVertex(){
+        JOptionPane.showMessageDialog(null, "No puedes escoger el mismo vertice", "Opción no valida", JOptionPane.ERROR_MESSAGE);
+    }
 
     public static void setPrimaryVertex() {
         primaryOcuppied = false;
