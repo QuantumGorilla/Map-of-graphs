@@ -18,16 +18,19 @@ import javax.swing.JOptionPane;
  */
 public class Frame extends javax.swing.JFrame {
 
-    private ArrayList<Edge> minRoute = new ArrayList<>();
-    private Graph graph;
-    private int[][] distance;
-    private int[][] route;
-    private Vertex origin;
-    private Vertex destiny;
-    private Vertex helperVertex;
-    private final Graphics graphics;
-    private java.awt.Graphics g;
+    private ArrayList<Edge> minRoute = new ArrayList<>(); //Lista con la mínima ruta
+    private Graph graph; //Grafo 
+    private int[][] distance; //Matriz de distancias
+    private int[][] route; //Matriz de caminos
+    private Vertex origin; //Vertice origen
+    private Vertex destiny; //Vertice destino
+    private Vertex helperVertex; //Vertice ayudante
+    private final Graphics graphics; //Graficos 
+    private java.awt.Graphics g; //Graficos por default
 
+    /**
+     * Constructor
+     */
     public Frame() {
         initComponents();
         graph = new Graph();
@@ -39,27 +42,55 @@ public class Frame extends javax.swing.JFrame {
         graphics.playMusic();
     }
 
+    /**
+     * Evita la expansión de la ventana
+     *
+     * @param resize
+     */
     private void setResize(boolean resize) {
         this.setResizable(resize);
     }
 
+    /**
+     * Coloca el icono de la ventana
+     */
     private void setFavicon() {
         this.setIconImage(new ImageIcon(getClass().getResource("/Images/Mario Mushroom.png")).getImage());
     }
 
+    /**
+     * Coloca el título de la ventana
+     */
     private void setTitle() {
         this.setTitle("Mario World Navigator");
     }
 
+    /**
+     * Centra la ventana
+     */
     private void setScreenLocation() {
         this.setLocationRelativeTo(null);
     }
 
+    /**
+     * Pinta el vertice
+     *
+     * @param g, graphics 2D del mapa
+     * @param n, vertice a pintar
+     */
     private void paint(Graphics2D g, Vertex n) {
         map2.revalidate();
         graphics.paintVertex(g, n);
     }
 
+    /**
+     * Pinta la arista
+     *
+     * @param g, graphics 2D del mapa
+     * @param origin, vertice origen
+     * @param destiny, vertice destino
+     * @param distance, distancia entre el vertice origen y el vertice destino
+     */
     private void paintDistance(Graphics2D g, Vertex origin, Vertex destiny, int distance) {
         map2.revalidate();
         graphics.paintDistance(g, origin, destiny, distance);
@@ -80,6 +111,7 @@ public class Frame extends javax.swing.JFrame {
         price = new javax.swing.JButton();
         helpLabel = new javax.swing.JLabel();
         deleteButton = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
         backgroundLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -120,7 +152,7 @@ public class Frame extends javax.swing.JFrame {
 
         priceLabel.setFont(new java.awt.Font("Georgia", 1, 14)); // NOI18N
         priceLabel.setText("Mínimo Costo");
-        backGroundPanel.add(priceLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 70, -1, 30));
+        backGroundPanel.add(priceLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 60, -1, 30));
 
         price.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/Coin Mario.png"))); // NOI18N
         price.setBorder(null);
@@ -142,13 +174,20 @@ public class Frame extends javax.swing.JFrame {
         });
         backGroundPanel.add(helpLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
-        deleteButton.setText("Eliminar");
+        deleteButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/Mario Poison Mushroom.png"))); // NOI18N
+        deleteButton.setBorder(null);
+        deleteButton.setContentAreaFilled(false);
+        deleteButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         deleteButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 deleteButtonActionPerformed(evt);
             }
         });
-        backGroundPanel.add(deleteButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 60, -1, -1));
+        backGroundPanel.add(deleteButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 40, -1, -1));
+
+        jLabel1.setFont(new java.awt.Font("Georgia", 1, 14)); // NOI18N
+        jLabel1.setText("Eliminar");
+        backGroundPanel.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 67, -1, 20));
 
         backgroundLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/Clouds.png"))); // NOI18N
         backGroundPanel.add(backgroundLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 750, 120));
@@ -158,6 +197,13 @@ public class Frame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Evento para cuando se de click izquierdo se cree una vertice y cuando se
+     * de click derecho a un vertice origen y luego a un vertice destino se cree
+     * una arista
+     *
+     * @param evt, evento del click
+     */
     private void map2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_map2MouseClicked
 
         try {
@@ -213,11 +259,20 @@ public class Frame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_map2MouseClicked
 
+    /**
+     * Añade los vertices al comboBox de origen y destino
+     */
     private void addVertexInComboBox() {
         originBox.insertItemAt(graph.vertex.get(Helper.vertexCount).getCity(), Helper.vertexCount);
         destinyBox.insertItemAt(graph.vertex.get(Helper.vertexCount).getCity(), Helper.vertexCount);
     }
 
+    /**
+     * Evento cuando se de click en la moneda busca el camino mínimo y el costo
+     * mínimo
+     *
+     * @param evt, evento de click
+     */
     private void priceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_priceActionPerformed
 
         try {
@@ -244,6 +299,12 @@ public class Frame extends javax.swing.JFrame {
 
     }//GEN-LAST:event_priceActionPerformed
 
+    /**
+     * Busca el vertice origen en el ComboBox
+     *
+     * @return un vertice si encuentra el item seleccionado o null si no lo
+     * encuentra
+     */
     private Vertex searchOriginVertex() {
         for (Vertex v : graph.vertex) {
             if (originBox.getSelectedItem().toString().equalsIgnoreCase(v.getCity())) {
@@ -253,6 +314,12 @@ public class Frame extends javax.swing.JFrame {
         return null;
     }
 
+    /**
+     * Busca el vertice destino en el ComboBox
+     *
+     * @return un vertice si encuentra el item seleccionado o null si no lo
+     * encuentra
+     */
     private Vertex searchDestinyVertex() {
         for (Vertex v : graph.vertex) {
             if (destinyBox.getSelectedItem().toString().equalsIgnoreCase(v.getCity())) {
@@ -262,12 +329,24 @@ public class Frame extends javax.swing.JFrame {
         return null;
     }
 
+    /**
+     * Evento para cuando se de click en el label de ayuda se despligue un
+     * mensaje de ayuda
+     *
+     * @param evt, evento de click
+     */
     private void helpLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_helpLabelMouseClicked
 
         Helper.helpMessage();
 
     }//GEN-LAST:event_helpLabelMouseClicked
 
+    /**
+     * Evento para cuando se de click en el hongo venenoso se elimine un vertice
+     * y se eliminan las aristas entrantes y salientes del mismo
+     *
+     * @param evt, evento de click
+     */
     private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
 
         try {
@@ -288,6 +367,9 @@ public class Frame extends javax.swing.JFrame {
 
     }//GEN-LAST:event_deleteButtonActionPerformed
 
+    /**
+     * Repinta el grafo cuando se elimina un vertice
+     */
     private void repaintGraph() {
         graph.vertex.forEach((v) -> {
             graphics.paintVertex((Graphics2D) map2.getGraphics(), v);
@@ -299,6 +381,11 @@ public class Frame extends javax.swing.JFrame {
         }
     }
 
+    /**
+     * Elimina de los ComboBox el vertice que quiera el usuario
+     *
+     * @param ans, nombre del vertice a eliminar
+     */
     private void removeFromBoxes(String ans) {
         originBox.removeItem(ans);
         destinyBox.removeItem(ans);
@@ -338,6 +425,7 @@ public class Frame extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> destinyBox;
     private javax.swing.JLabel destinyLabel;
     private javax.swing.JLabel helpLabel;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel map;
     private javax.swing.JLabel map2;
     private javax.swing.JComboBox<String> originBox;

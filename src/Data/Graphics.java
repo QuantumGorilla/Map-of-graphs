@@ -20,6 +20,17 @@ import javax.sound.sampled.UnsupportedAudioFileException;
  */
 public class Graphics {
 
+    /**
+     * Método de colisiones, utiliza un radio de 30 pixeles para evitar que se
+     * agregue un vertice encima de otro
+     *
+     * @param vertex, lista para checkear con todos los vertices y sus
+     * posiciones
+     * @param x, posición en x donde se dio click
+     * @param y, posición en y donde se dio click
+     * @return true si choca con algún vertice o false si no hay ningún vertice
+     * en el radio de 30 pixeles
+     */
     public boolean checkVertexPosition(ArrayList<Vertex> vertex, int x, int y) {
         for (Vertex n : vertex) {
             if (n.getPosX() + 30 >= x && n.getPosX() - 30 <= x && n.getPosY() + 30 >= y && n.getPosY() - 30 <= y) {
@@ -29,6 +40,17 @@ public class Graphics {
         return false;
     }
 
+    /**
+     * Método para seleccionar un vertice en pantalla, utilizando 30 pixeles de
+     * radio
+     *
+     * @param vertex, la lista para checkear sus respectivas posiciones y si el
+     * click que se da es cercano
+     * @param x, posición en x donde se dio click
+     * @param y, posición en y donde se dio click
+     * @return retorna el vertice encontrado en la posición donde se dio click o
+     * null si no encuentra nada
+     */
     public Vertex getVertexInPosition(ArrayList<Vertex> vertex, int x, int y) {
         primaryOcuppied = true;
         for (Vertex n : vertex) {
@@ -39,6 +61,15 @@ public class Graphics {
         return null;
     }
 
+    /**
+     * Método para crear un vertice
+     *
+     * @param ans, respuesta del usuario
+     * @param x, posición en x donde se dio click
+     * @param y, posición en y donde se dio click
+     * @return un vertice creado con las posiciones en (x,y) y el nombre de la
+     * ciudad
+     */
     public Vertex answer(String ans, int x, int y) {
         if (ans.equalsIgnoreCase("Si") && !ans.isEmpty()) {
             String city = Helper.introduceCity();
@@ -47,6 +78,16 @@ public class Graphics {
         return null;
     }
 
+    /**
+     * Método para buscar el vertice de origen donde se haya dado click para
+     * crear la arista
+     *
+     * @param vertex, la lista de vertices donde se recorrera para buscar
+     * @param x, posición en x donde se dio click
+     * @param y, posición en y donde se dio click
+     * @return un vertice si la posición donde se dio click existe uno sino
+     * retorna null
+     */
     public Vertex originVertex(ArrayList<Vertex> vertex, int x, int y) {
         if (checkVertexPosition(vertex, x, y) && !Helper.primaryOcuppied) {
             Vertex a = getVertexInPosition(vertex, x, y);
@@ -56,9 +97,19 @@ public class Graphics {
         return null;
     }
 
-    public Vertex destinyVertex(ArrayList<Vertex> nodes, int x, int y) {
-        if (checkVertexPosition(nodes, x, y)) {
-            Vertex b = getVertexInPosition(nodes, x, y);
+    /**
+     * Método para buscar el vertice destino donde se haya dado click para crear
+     * la arista
+     *
+     * @param vertex, la lista de vertices donde se recorrera para buscar
+     * @param x, posición en x donde se dio click
+     * @param y, posición en x donde se dio click
+     * @return un vertice si la posición donde se dio click existe uno sino
+     * retorna null
+     */
+    public Vertex destinyVertex(ArrayList<Vertex> vertex, int x, int y) {
+        if (checkVertexPosition(vertex, x, y)) {
+            Vertex b = getVertexInPosition(vertex, x, y);
             JOptionPane.showMessageDialog(null, "Seleccionaste el vertice: " + b.getCity(), "Seleccion Exitosa", JOptionPane.INFORMATION_MESSAGE);
             Helper.setPrimaryVertex();
             return b;
@@ -66,6 +117,12 @@ public class Graphics {
         return null;
     }
 
+    /**
+     * Pinta el vertice en la posición (x,y) del mapa donde se dio click
+     *
+     * @param g, graphics 2D del mapa
+     * @param n, vertice a pintar
+     */
     public void paintVertex(Graphics2D g, Vertex n) {
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g.setStroke(new BasicStroke(3));
@@ -76,9 +133,17 @@ public class Graphics {
 
         g.setColor(Color.BLACK);
         g.setFont(new Font("Gadugi", Font.BOLD, 10));
-        g.drawString(n.getCity(), n.getPosX()-5, n.getPosY());
+        g.drawString(n.getCity(), n.getPosX() - 5, n.getPosY());
     }
 
+    /**
+     * Método para pintar la arista desde un vertice origen a un vertice destino
+     *
+     * @param g, graphics 2D del mapa
+     * @param origin, vertice origen
+     * @param destiny, vertice destino
+     * @param distance, el valor de la distancia entre el par de vertices
+     */
     public void paintDistance(Graphics2D g, Vertex origin, Vertex destiny, int distance) {
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g.setStroke(new BasicStroke(3));
@@ -90,6 +155,12 @@ public class Graphics {
         g.drawString(String.valueOf(distance), ((origin.getPosX() + destiny.getPosX()) / 2), ((origin.getPosY() + destiny.getPosY()) / 2) + 10);
     }
 
+    /**
+     * Pinta la mínima ruta obtenida del algoritmo de Floyd Warshall
+     *
+     * @param g, graphics 2D del mapa
+     * @param minRoute, lista de aristas para pintar la mínima ruta
+     */
     public void paintMinPath(Graphics2D g, ArrayList<Edge> minRoute) {
         if (!minRoute.isEmpty()) {
             minRoute.forEach((r) -> {
@@ -98,6 +169,15 @@ public class Graphics {
         }
     }
 
+    /**
+     * Pinta la mínima ruta por cada arista enviada del método paintMinPath();
+     *
+     * @see PaintMinPath(Graphics2D g, ArrayList<Edge> minRoute);
+     * @param g, graphics 2D del mapa
+     * @param origin, vertice origen
+     * @param destiny, vertice destino
+     * @param distance, distancia entre un par de vertice
+     */
     private void paintMinimun(Graphics2D g, Vertex origin, Vertex destiny, int distance) {
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g.setStroke(new BasicStroke(3));
@@ -109,6 +189,9 @@ public class Graphics {
         g.drawString(String.valueOf(distance), ((origin.getPosX() + destiny.getPosX()) / 2), ((origin.getPosY() + destiny.getPosY()) / 2));
     }
 
+    /**
+     * Reproduce música de manera continua de Mario Bros
+     */
     public void playMusic() {
         try {
             Clip sound = AudioSystem.getClip();
